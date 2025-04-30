@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\AdminCpanel;
 
+use App\DataTransferObjects\Banners\{AdPopUpDataTransfer,BannerAdDataTransfer , BannerDataTransfer};
+use App\Contracts\BannerContract;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BannerRequest;
-use App\Services\Actions\DataTransferObjects\BannerFilterDataTransfer;
 use App\Models\{Banner , Setting ,Category ,Product};
-use App\Services\BannerService;
 
 class BannerController extends Controller
 {
     public function __construct(
-        protected readonly BannerService $bannerService,
+        protected readonly BannerContract $bannerContract,
     ){
         $this->settings = Setting::query()->first();
     }
 
     public function index()
     {
-        $items = Banner::query()->filter()->orderBy('id', 'desc')->paginate($this->settings->dashboard_paginate);
+        $items = $this->bannerContract->getBanners([request()->all() , 'isPaginate'=>true]);
         return view('adminCpanel.banners.home', compact('items'));
     }
 
@@ -31,9 +31,10 @@ class BannerController extends Controller
     }
 
 
-    public function store(BannerRequest $request)
+    public function store(BannerRequest $request )
     {
-        $this->bannerService->createBanner($request);
+        $bannerDto = BannerDataTransfer::fromRequest($request);
+        $this->bannerContract->createBanner($bannerDto);
         return redirect()->back()->with('status', __('cp.create'));
     }
 
@@ -48,8 +49,9 @@ class BannerController extends Controller
 
     public function update(BannerRequest $request, $id)
     {
-        $banner = Banner::findOrFail($id);
-        $this->bannerService->updateBanner($banner , $request);
+        $banner = $this->bannerContract->getBanner($id);
+        $bannerDto = BannerDataTransfer::fromRequest($request);
+        $this->bannerContract->updateBanner($banner, $bannerDto);
         return redirect()->back()->with('status', __('cp.update'));
     }
 
@@ -63,7 +65,8 @@ class BannerController extends Controller
 
     public function bannerAdUpdate(BannerRequest $request)
     {
-        $this->bannerService->bannerAdUpdate($request);
+        $bannerAdDto = BannerAdDataTransfer::fromRequest($request);
+        $this->bannerContract->bannerAdUpdate($bannerAdDto);
         return redirect()->back()->with('status', __('cp.update'));
     }
     public function adPopUp()
@@ -76,7 +79,8 @@ class BannerController extends Controller
 
     public function adPopUpUpdate(BannerRequest $request)
     {
-        $this->bannerService->adPopUpUpdate($request);
+        $adPopUpDto = AdPopUpDataTransfer::fromRequest($request);
+        $this->bannerContract->adPopUpUpdate($adPopUpDto);
         return redirect()->back()->with('status', __('cp.update'));
     }
 }

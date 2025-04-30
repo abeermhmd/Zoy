@@ -1,100 +1,69 @@
 <?php
 
 namespace App\Services;
-use App\Models\Banner;
-use App\Models\Setting;
-use App\Traits\ImageTrait;
-use Illuminate\Support\Facades\DB;
 
-class BannerService
+use App\Actions\Banners\{AdPopUpUpdateAction, GetBannerAction, GetBannersAction,
+    BannerAdUpdateAction, CreateBannerAction, UpdateBannerAction};
+use App\Contracts\BannerContract;
+use App\DataTransferObjects\Banners\AdPopUpDataTransfer;
+use App\DataTransferObjects\Banners\BannerAdDataTransfer;
+use App\DataTransferObjects\Banners\BannerDataTransfer;
+use App\Models\{Banner,Setting };
+use App\Traits\ImageTrait;
+use App\TypeLinkBanner;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+
+class BannerService implements BannerContract
 {
     use ImageTrait;
-    public function createBanner($data): void
+
+    public function getBanners(?array $filters = null): LengthAwarePaginator|Collection
     {
-        DB::transaction(function () use ($data) {
-            $banner = new Banner();
-            if ($data->type == 1 && $data->hasFile('image')) {
-                $banner->image = $this->storeImage($data->file('image'), 'mainImages');
-            }elseif($data->type == 2 && $data->hasFile('url')){
-                $banner->image = $this->storeImage($data->file('url'), 'mainImages' , null,null,null, 2);
-            }
-            $banner->type = $data['type'];
-            $banner->type_link = $data['type_link'];
-            if ($data['type_link'] == 2) {
-                $banner->linked_id = $data['product_id'];
-            } elseif ($data['type_link'] == 3) {
-                $banner->linked_id = $data['category_id'];
-            } elseif ($data['type_link'] == 4) {
-                $banner->linked_id = $data['sub_category_id'];
-            } else {
-                $banner->linked_id = null;
-            }
-            $banner->save();
-        });
+        return GetBannersAction::execute($filters);
     }
 
-    public function updateBanner(Banner $banner, $data): void
+    public function getBanner(string $id): Banner
     {
-        DB::transaction(function () use ($data , $banner) {
-            if ($data->type == 1 && $data->hasFile('image')) {
-                $banner->image = $this->storeImage($data['image'], 'mainImages', $banner->getRawOriginal('image') ? $banner->getRawOriginal('image') : null);
-            }elseif($data->type == 2 && $data->hasFile('url')){
-                $banner->image = $this->storeImage($data->file('url'), 'mainImages' , $banner->getRawOriginal('image') ?$banner->getRawOriginal('image') : null,null,null, 2);
-            }
-            $banner->type = $data['type'];
-            $banner->type_link = $data['type_link'];
-            if ($data['type_link'] == 2) {
-                $banner->linked_id = $data['product_id'];
-            } elseif ($data['type_link'] == 3) {
-                $banner->linked_id = $data['category_id'];
-            } elseif ($data['type_link'] == 4) {
-                $banner->linked_id = $data['sub_category_id'];
-            } else {
-                $banner->linked_id = null;
-            }
-            $banner->save();
-        });
+        return GetBannerAction::execute($id);
     }
-    public function bannerAdUpdate($data): void
+
+    public function createBanner(BannerDataTransfer $data): void
     {
-        DB::transaction(function () use ($data ) {
-            $settings = Setting::first();
-            if ($data->hasFile('banner_ad_image')) {
-                $settings->banner_ad_image = $this->storeImage($data['banner_ad_image'], 'settings',
-                    $settings->getRawOriginal('banner_ad_image') ?  $settings->getRawOriginal('banner_ad_image') : null);
-            }
-            $settings->type_link = $data['type_link'];
-            if ($data['type_link'] == 2) {
-                $settings->linked_id = $data['product_id'];
-            } elseif ($data['type_link'] == 3) {
-                $settings->linked_id = $data['category_id'];
-            } elseif ($data['type_link'] == 4) {
-                $settings->linked_id = $data['sub_category_id'];
-            } else {
-                $settings->linked_id = null;
-            }
-            $settings->save();
-        });
+        CreateBannerAction::execute($data);
     }
-    public function adPopUpUpdate($data): void
+
+    public function updateBanner(Banner $banner, BannerDataTransfer $data): void
     {
-        DB::transaction(function () use ($data ) {
-            $settings = Setting::first();
-            if ($data->hasFile('ad_popUp_image')) {
-                $settings->ad_popUp_image = $this->storeImage($data['ad_popUp_image'], 'settings',
-                    $settings->getRawOriginal('ad_popUp_image') ?  $settings->getRawOriginal('ad_popUp_image') : null);
-            }
-            $settings->type_link_pop = $data['type_link'];
-            if ($data['type_link'] == 2) {
-                $settings->linked_id_pop = $data['product_id'];
-            } elseif ($data['type_link'] == 3) {
-                $settings->linked_id_pop = $data['category_id'];
-            } elseif ($data['type_link'] == 4) {
-                $settings->linked_id_pop = $data['sub_category_id'];
-            } else {
-                $settings->linked_id_pop = null;
-            }
-            $settings->save();
-        });
+        UpdateBannerAction::execute($this , $banner, $data);
+    }
+
+    public function bannerAdUpdate(BannerAdDataTransfer $data): void
+    {
+        $settings = Setting::first();
+        BannerAdUpdateAction::execute($this,$settings, $data);
+    }
+
+    public function adPopUpUpdate(AdPopUpDataTransfer $data): void
+    {
+        $settings = Setting::first();
+       AdPopUpUpdateAction::execute($this,$settings, $data);
+    }
+
+    public function typeLink(BannerDataTransfer|AdPopUpDataTransfer|BannerAdDataTransfer $data)
+    {
+        $typeLinkField = $data instanceof AdPopUpDataTransfer ? 'type_link_pop' : 'type_link';
+        if (!isset($data->$typeLinkField)) {
+            return null;
+        }
+
+        $typeLink = TypeLinkBanner::tryFrom((int) $data->$typeLinkField);
+
+        return match ($typeLink) {
+            TypeLinkBanner::PRODUCT => $data->product_id,
+            TypeLinkBanner::MAINCATEGORY => $data->category_id,
+            TypeLinkBanner::SUBCATEGORY => $data->sub_category_id,
+            default => null,
+        };
     }
 }

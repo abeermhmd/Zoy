@@ -2,7 +2,7 @@
 
 use App\Models\Language;
 use Illuminate\Support\Facades\Cache;
-
+use App\Models\Setting;
 function storeTranslatedFields($model, $fieldNames, $data)
 {
     if (is_null($model) || is_null($fieldNames) || is_null($data)) {
@@ -21,7 +21,23 @@ function storeTranslatedFields($model, $fieldNames, $data)
         });
     });
 }
+if (!function_exists('get_setting')) {
+    function get_setting(string $key = null, $default = null)
+    {
+        $settings = Cache::get('settings');
 
+        if (!$settings) {
+            $settings = Setting::first();
+            Cache::forever('settings', $settings);
+        }
+
+        if ($key) {
+            return $settings->{$key} ?? $default;
+        }
+
+        return $settings;
+    }
+}
 function can($permission)
 {
     $userCheck = auth()->guard('admin')->check();

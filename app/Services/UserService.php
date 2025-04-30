@@ -9,7 +9,6 @@ class UserService
 {
     public function createUser($data) : User
     {
-
       return  DB::transaction(function () use ($data) {
             $user = new User();
             $user->name = $data->name;

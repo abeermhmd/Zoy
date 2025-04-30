@@ -27,7 +27,8 @@ class ProductController extends Controller
     public function index()
     {
         $items = Product::query()->filter()->orderBy('id', 'desc')->paginate($this->settings->dashboard_paginate);
-        $categories = Category::where(function ($query) {
+        $categories = Category::active()
+            ->where(function ($query) {
                 $query->whereNull('parent_id')->whereDoesntHave('subcategories')
                     ->orWhereNotNull('parent_id');
             })->orderBy('id')->get();

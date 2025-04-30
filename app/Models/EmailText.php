@@ -27,7 +27,6 @@ class EmailText extends Model
             'Uncompleted_orders' => __('cp.Uncompleted_orders'),
             'Birthday' => __('cp.Birthday'),
             'After_Registration' => __('cp.After_Registration'),
-            'invoice' => __('cp.invoice'),
             default => __('website.unknown_status'),
         };
     }

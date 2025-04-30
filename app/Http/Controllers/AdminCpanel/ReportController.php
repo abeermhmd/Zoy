@@ -33,7 +33,7 @@ class ReportController extends Controller
                 $query->whereIn('orders.id', Order::query()->filter()->pluck('id'));
             })
             ->groupBy('product_id')
-            ->orderBy('quantity_sold')
+            ->orderByDesc('quantity_sold')
             ->limit(10)
             ->get()
             ->map(function ($item) {
@@ -49,24 +49,21 @@ class ReportController extends Controller
                 return $item;
             });
 
-        $categorySales = DB::table('order_products')
-            ->selectRaw('
-        category_translations.name as category_name,
-        SUM(order_products.quantity) as total_quantity,
-        SUM(order_products.quantity * products.price) as total_amount
-    ')
+        $categorySales = OrderProduct::selectRaw('product_id, SUM(quantity) as quantity_sold')
             ->join('orders', 'order_products.order_id', '=', 'orders.id')
-            ->join('products', 'order_products.product_id', '=', 'products.id')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->join('category_translations', function ($join) {
-                $join->on('categories.id', '=', 'category_translations.category_id')
-                    ->where('category_translations.locale', app()->getLocale());
-            })
             ->where('orders.payment_status', 1)
-            ->whereIn('orders.id', Order::query()->filter()->pluck('id'))
-            ->groupBy('category_translations.name')
-            ->orderBy('category_translations.name', 'asc')
-            ->get();
+            ->where(function ($query) {
+                $query->whereIn('orders.id', Order::query()->filter()->pluck('id'));
+            })
+            ->groupBy('product_id')
+            ->get()
+            ->map(function ($item) {
+                $item->product = Product::find($item->product_id);
+                $item->category_name = $item->product->category->name;
+                $item->total_amount = $item->quantity_sold * $item->product->price;
+                return $item;
+            })
+            ->groupBy('category_name');
 
         $countrySales = Order::where('payment_status', 1)
             ->when(request()->has('start_date') || request()->has('end_date'), function($query) {
@@ -85,7 +82,7 @@ class ReportController extends Controller
             ->map(function ($item) {
                 $item->country = $item->country_id ? ($item->country->name ?? $item->country_id) : ($item->address->country->name ?? 'Unknown');
                 return $item;
-            })->sortBy('country');
+            });
         return view('adminCpanel.reports.home', compact('totalSales', 'topProducts', 'categorySales', 'countrySales'));
     }
     public function salesByCountry(Request $request)

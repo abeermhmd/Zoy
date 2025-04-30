@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Contracts\BannerContract;
+use App\Services\BannerService;
 use App\Models\{Category, Language, Setting};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Cache;
@@ -13,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(PaymentGatewayInterface::class, MyFatoorahPayment::class);
+        $this->app->bind(BannerContract::class, BannerService::class);
     }
 
     public function boot(): void

@@ -9,13 +9,16 @@ use Illuminate\Http\UploadedFile;
 
 trait ImageTrait
 {
+    //type : 1->image ,  2->file
     public function storeImage($image, $fileName, $oldImageName = null, $width = null, $height = null, $type = 1)
     {
+
         if (!$image) {
             return null;
         }
 
         if ($type == 1) {
+
             return is_array($image) ? $this->storeMultipleImages($image, $fileName, $oldImageName, $width, $height) : $this->storeSingleImage($image, $fileName, $oldImageName, $width, $height);
         } else {
             return $this->storeOtherFiles($image, $fileName, $oldImageName);
@@ -28,7 +31,9 @@ trait ImageTrait
         $image = $this->convertBase64ToFile($image, $fileName);
         }
 
-        if (!$image || !file_exists($image->getPathname())) {
+        if ( !$image instanceof UploadedFile ||
+            !$image->isValid() ||
+            !file_exists($image->getPathname())) {
             throw new \Exception("The uploaded image file does not exist.");
         }
 

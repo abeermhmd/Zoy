@@ -9,7 +9,6 @@ use App\Services\UserService;
 use App\Models\{EmailText, Order, Setting, Country, User, UserAddress, Product, Favorite};
 use Auth;
 use Session;
-use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -131,22 +130,13 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 201,
-                'error' => __('recaptcha verification failed', ['default' => 'حدث خطأ أثناء محاولة التسجيل. يرجى المحاولة مرة أخرى لاحقاً.'])
-
+                'error' => __('website.recaptcha_verification_failed', 'فشل التحقق الأمني، يرجى تحديث الصفحة والمحاولة مرة أخرى')
             ]);
         }
-
         $newUser = $this->userService->createUser($request);
 
         Auth::guard()->login($newUser);
 
-        return response()->json(['code' => 200, 'message' => __('api.ok'), 'redirect_url' => route('home')]);
-
-        if (function_exists('fastcgi_finish_request')) {
-            fastcgi_finish_request();
-        }
-
-        // Email logic after response
         $emailText = EmailText::active()->where('type', 'After_Registration')->first();
         if ($emailText) {
             $emailData = [
@@ -156,8 +146,7 @@ class UserController extends Controller
             $message = view('website.email', ['item' => $emailText])->render();
             $this->notificationService->sendNotification($message, $emailData, 'email');
         }
-
-        exit;
+        return response()->json(['code' => 200, 'message' => __('api.ok'), 'redirect_url' => route('home')]);
     }
 
     public function myAddresses()
