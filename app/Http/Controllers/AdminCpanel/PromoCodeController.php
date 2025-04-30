@@ -21,8 +21,9 @@ class PromoCodeController extends Controller
 
     public function index()
     {
+        $countries = Country::active()->get();
         $items = PromoCode::query()->filter()->orderBy('id', 'desc')->paginate($this->settings->dashboard_paginate);
-        return view( 'adminCpanel.promoCodes.home',compact('items'));
+        return view( 'adminCpanel.promoCodes.home',compact('items','countries'));
     }
 
     public function create()

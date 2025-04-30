@@ -54,8 +54,10 @@ class NewsletterService
 
     private function handleNewsletterAction(Newsletter $item, $data): void
     {
+        $activeSubscribersCount  = 0 ;
         if ($data['status'] === 'delivered') {
-            $subscribers =  Subscriber::active()->get();;
+            $subscribers =  Subscriber::active()->get();
+            $activeSubscribersCount = $subscribers->count();
             foreach ($subscribers as $subscriber) {
                 $emailData = [
                     'to' => $subscriber->email,
@@ -64,6 +66,8 @@ class NewsletterService
                 $message = view('website.email', ['item' => $item])->render();
                 $this->notificationService->sendNotification($message, $emailData, 'email');
             }
+            $item->total_recipients = $activeSubscribersCount;
         }
+
     }
 }

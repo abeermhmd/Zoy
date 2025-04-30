@@ -52,7 +52,7 @@ class UserRequest extends FormRequest
                 ];
                 break;
 
-            case 'admins.users.edit_password':
+            case 'admins.users.update_password':
                 $rules = [
                     'password' => 'required|min:6',
                     'confirm_password' => 'required|same:password|min:6',
@@ -88,12 +88,5 @@ class UserRequest extends FormRequest
         return $rules;
     }
 
-    public function attributes()
-    {
-        return [
-            'new_password' => 'كلمة المرور الجديدة',
-            'old_password' => 'كلمة المرور الحالية',
-            'confirm_password' => 'تأكيد كلمة المرور',
-        ];
-    }
+
 }

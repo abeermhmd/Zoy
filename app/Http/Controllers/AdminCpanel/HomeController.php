@@ -64,16 +64,15 @@ class HomeController extends Controller
 
         if ($role != "") {
             if ($request->action == 'delete') {
-                // حذف الصور المرتبطة بكل عنصر
                 $role::query()->whereIn('id', $request->IDsArray)->each(function ($item) use ($model) {
                     if (isset($item->image) && $item->image) {
-                        $imageName = basename($item->image); // استخراج اسم الصورة
+                        $imageName = basename($item->image);
                         if ($model == 'banners') {
                             $folder = 'mainImages';
                         } else {
-                            $folder = strtolower(string: $model); // تحديد اسم المجلد بناءً على اسم الموديل
+                            $folder = strtolower(string: $model);
                         }
-                        $this->deleteOldImage($folder, $imageName); // حذف الصورة باستخدام الدالة
+                        $this->deleteOldImage($folder, $imageName);
                     }
                     if (isset($item->size_guide_image) && $item->size_guide_image) {
                         $imageName = basename($item->size_guide_image);
@@ -108,7 +107,12 @@ class HomeController extends Controller
                     $role::query()->whereIn('id', $request->IDsArray)->update(['status' => $request->action]);
                 }
             }
-            return $request->action;
+            return response()->json([
+                'status' => true,
+                'message' => __('cp.success_message'),
+                'action' => $request->action,
+            ]);
+
         }
         return false;
     }

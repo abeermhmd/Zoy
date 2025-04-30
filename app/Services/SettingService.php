@@ -14,7 +14,7 @@ class SettingService
     {
         DB::transaction(function () use ($setting, $data) {
             $translatedFields = [
-                'title' ,'instagram_text_footer'
+                'title' ,'instagram_text_footer', 'address', 'area', 'street' , 'block'
             ];
             storeTranslatedFields($setting, $translatedFields, $data);
 

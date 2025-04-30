@@ -49,6 +49,8 @@ class ProductService
 
             if ($data->has('filename')) {
                 $imageNames = $this->storeImage($data['filename'], 'products');
+                $imageNames = array_slice($imageNames, 0, 6);
+
                 foreach ($imageNames as $imageName) {
                     ProductImage::create([
                         'product_id' => $newItem->id,
@@ -209,11 +211,20 @@ class ProductService
 
             if ($data->has('filename')) {
                 $imageNames = $this->storeImage($data['filename'], 'products');
-                foreach ($imageNames as $imageName) {
-                    ProductImage::create([
-                        'product_id' => $item->id,
-                        'image' => $imageName,
-                    ]);
+
+                $oldImagesCount = ProductImage::where('product_id', $item->id)->count();
+
+                $allowedSlots = 6 - $oldImagesCount;
+
+                if ($allowedSlots > 0) {
+                    $imageNames = array_slice($imageNames, 0, $allowedSlots);
+
+                    foreach ($imageNames as $imageName) {
+                        ProductImage::create([
+                            'product_id' => $item->id,
+                            'image' => $imageName,
+                        ]);
+                    }
                 }
             }
 

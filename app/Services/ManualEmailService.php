@@ -113,6 +113,8 @@ class ManualEmailService
                     $message = view('website.email', ['item' => $item])->render();
                     $this->notificationService->sendNotification($message, $emailData, 'email');
                 }
+            $item->total_recipients = count($users);
+            $item->save();
 //            });
         }
     }

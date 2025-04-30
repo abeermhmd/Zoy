@@ -34,7 +34,9 @@ class HomeController extends Controller
        if ($this->settings->is_alowed_subscription == 0) {
            return response()->json([
                'code' => 201,
-               'error' => __('website.subscribeStoped')]);
+               'error' => __('website.subscribeStoped'),
+               'message' => __('website.subscribeStoped'),
+           ]);
        }
         $request->validate([
             'email' => 'required|email|unique:subscribers,email',

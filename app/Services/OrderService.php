@@ -1,8 +1,18 @@
 <?php
 
 namespace App\Services;
-use App\Models\{Cart, City, Country, Order, OrderProduct,
-    Product, ProductColorSize, PromoCode, PromoCodeCountry, Setting, UserAddress };
+use App\Models\{Cart,
+    City,
+    Country,
+    EmailText,
+    Order,
+    OrderProduct,
+    Product,
+    ProductColorSize,
+    PromoCode,
+    PromoCodeCountry,
+    Setting,
+    UserAddress};
 use Illuminate\Support\Facades\{DB, Session};
 use App\Services\Payment\PaymentGatewayInterface;
 use App\Services\Notifications\NotificationService;
@@ -90,7 +100,8 @@ class OrderService
                         'to' => $order->email ?? auth('web')->user()->email,
                         'subject' => $this->settings->title .'|' . __('cp.invoice'),
                     ];
-                    $message = view('website.invoice', ['order' =>$order])->render();
+                    $emailText = EmailText::where('type', 'invoice')->first();
+                    $message = view('website.invoice', ['order' =>$order , 'emailText'=>$emailText])->render();
                     $this->notificationService->sendNotification($message, $emailData, 'email');
                 }
 
@@ -121,7 +132,9 @@ class OrderService
         $weight = 0;
 
         foreach ($cart as $one) {
+
             $productData = $this->getProductData($one);
+
             if ($productData['quantity'] < $one->quantity) {
                 $message = __('website.noQuantity') . " (" . $productData['name'];
                 if ($productData['color']) $message .= " - " . $productData['color'];

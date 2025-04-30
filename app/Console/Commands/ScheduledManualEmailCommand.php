@@ -105,6 +105,7 @@ class ScheduledManualEmailCommand extends Command
                     }
 
                     $email->status = 'delivered';
+                    $email->total_recipients = count($users);
                     $email->save();
                 } catch (Exception $e) {
                     $this->error("Error processing email ID: {$email->id}: " . $e->getMessage());

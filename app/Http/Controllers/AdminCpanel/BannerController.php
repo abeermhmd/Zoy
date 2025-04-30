@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AdminCpanel;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BannerRequest;
+use App\Services\Actions\DataTransferObjects\BannerFilterDataTransfer;
 use App\Models\{Banner , Setting ,Category ,Product};
 use App\Services\BannerService;
 
@@ -17,8 +18,7 @@ class BannerController extends Controller
 
     public function index()
     {
-        $items = $this->bannerService->getBanners(request()->all()+['isPaginate'=>true , 'perPage'=>$this->settings->dashboard_paginate]);
-//        $items = Banner::query()->filter()->orderBy('id', 'desc')->paginate($this->settings->dashboard_paginate);
+        $items = Banner::query()->filter()->orderBy('id', 'desc')->paginate($this->settings->dashboard_paginate);
         return view('adminCpanel.banners.home', compact('items'));
     }
 
@@ -33,8 +33,7 @@ class BannerController extends Controller
 
     public function store(BannerRequest $request)
     {
-        $banner = new Banner();
-        $this->bannerService->createBanner($banner , $request);
+        $this->bannerService->createBanner($request);
         return redirect()->back()->with('status', __('cp.create'));
     }
 

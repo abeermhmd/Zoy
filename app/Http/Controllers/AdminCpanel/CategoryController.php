@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\{Category, Setting};
 use App\Services\CategoryService;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -50,4 +51,28 @@ class CategoryController extends Controller
         $this->categoryService->updateCategory($item , $request);
         return redirect()->back()->with('status', __('cp.update'));
     }
+    public function toggleFeatured(Request $request)
+    {
+        $category = Category::findOrFail($request->id);
+
+        if ($category->subcategories()->exists()) {
+            $category->is_featured = $category->is_featured === 'yes' ? 'no' : 'no';
+            $category->save();
+            return response()->json([
+                'status' => false,
+                'message' => __('cp.cannot_be_featured_with_subcategories')
+            ], 422);
+        }
+
+        $category->is_featured = $category->is_featured === 'yes' ? 'no' : 'yes';
+        $category->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => __('cp.success_message'),
+            'is_featured' => $category->is_featured
+        ]);
+    }
+
+
 }

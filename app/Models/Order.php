@@ -71,7 +71,7 @@ class Order extends Model
     {
         $filters = request()->only([
             'order_id', 'total', 'created_at', 'status', 'name',
-            'start_date', 'end_date', 'email', 'mobile'
+            'start_date', 'end_date', 'email', 'mobile' ,'country_id'
         ]);
 
         if (!empty($filters['order_id'])) {
@@ -86,7 +86,7 @@ class Order extends Model
             $query->whereDate('created_at', 'like', '%' . $filters['created_at'] . '%');
         }
 
-        if (!empty($filters['status'])) {
+        if (isset($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
@@ -96,6 +96,14 @@ class Order extends Model
 
         if (!empty($filters['end_date'])) {
             $query->whereDate('created_at', '<=', Carbon::parse($filters['end_date']));
+        }
+        if (!empty($filters['country_id'])) {
+            $query->where(function ($query) use ($filters) {
+                $query->where('country_id', $filters['country_id'])
+                    ->orWhereHas('address', function ($q) use ($filters) {
+                        $q->where('country_id', $filters['country_id']);
+                    });
+            });
         }
 
         if (!empty($filters['name'])) {

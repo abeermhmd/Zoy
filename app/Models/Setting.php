@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Setting extends Model
 {
     use Translatable;
-    public $translatedAttributes = ['title' ,'shipping_content_kuwait','shipping_content_outside_kuwait','instagram_text_footer', 'key_words'];
+    public $translatedAttributes = ['title' ,'shipping_content_kuwait','shipping_content_outside_kuwait','instagram_text_footer', 'key_words'
+            ,'area', 'block', 'address','street'];
     public $guarded = [];
     protected $hidden = ['translations'];
 

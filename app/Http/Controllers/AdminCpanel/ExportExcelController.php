@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\{Country, Order, OrderProduct, Product, Subscriber, User};
 use App\Services\Exports\ExportExcelService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel as ExcelFormat;
 
 class ExportExcelController extends Controller
 {
@@ -23,6 +24,10 @@ class ExportExcelController extends Controller
         ];
         $model = Product::class;
         $export = new ExportExcelService($model, $columns, $titles);
+        $fileType = \request()->get('type', 'xlsx');
+        if ($fileType === 'csv') {
+            return $export->downloadAsCSV('Products_Sheet.csv');
+        }
         return $export->download('Products_Sheet.xlsx');
     }
 
@@ -62,6 +67,10 @@ class ExportExcelController extends Controller
         ];
         $model = Order::class;
         $export = new ExportExcelService($model, $columns, $titles);
+        $fileType = \request()->get('type', 'xlsx');
+        if ($fileType === 'csv') {
+            return $export->downloadAsCSV('Orders_Sheet.csv');
+        }
         return $export->download('Orders_Sheet.xlsx');
     }
     public function exportUsersOrdersReports()

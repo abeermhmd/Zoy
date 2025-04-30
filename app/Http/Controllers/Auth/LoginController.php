@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Services\Notifications\NotificationService;
 use App\Models\{EmailText, Setting, User};
 use Firebase\JWT\{JWK, JWT};
 use Illuminate\Http\{RedirectResponse, Request};
@@ -15,6 +16,10 @@ use Exception;
 
 class LoginController extends Controller
 {
+    public function __construct(
+        protected NotificationService $notificationService
+    ){}
+
     /**
      * Handle an incoming authentication request for regular users.
      */
@@ -153,6 +158,10 @@ class LoginController extends Controller
                 $user->mobile = $fullMobile;
                 $user->date_of_birth = $signupData['date_of_birth'];
                 $user->save();
+                if (function_exists('fastcgi_finish_request')) {
+                    fastcgi_finish_request();
+                }
+
                 $emailText = EmailText::active()->where('type', 'After_Registration')->first();
                 if ($emailText && isset($this->notificationService)) {
                     $emailData = ['to' => $user->email, 'subject' => $emailText->subject];
@@ -175,6 +184,7 @@ class LoginController extends Controller
             Auth::login($user, true);
 
             return redirect()->route('home');
+
         } catch (Exception $e) {
 
 
@@ -220,7 +230,7 @@ class LoginController extends Controller
                 'email' => 'nullable|email',
                 'introduction' => 'required|string|in:965,966,968,971,973,974',
                 'mobile' => 'required|string|regex:/^[0-9]{8,15}$/',
-                'date_of_birth' => 'required|regex:/^\d{2}-\d{2}-\d{4}$/|date|before:today',
+                'date_of_birth' => 'required|date|before:today',
                 'full_mobile' => 'unique:users,mobile,' . ($user->id ?? null),
             ]);
 
@@ -261,6 +271,9 @@ class LoginController extends Controller
                 }
                 $user->save();
 
+                if (function_exists('fastcgi_finish_request')) {
+                    fastcgi_finish_request(); // إرسال الاستجابة إلى العميل أولًا
+                }
                 $emailText = EmailText::active()->where('type', 'After_Registration')->first();
                 if ($emailText && isset($this->notificationService)) {
                     $emailData = ['to' => $user->email, 'subject' => $emailText->subject];

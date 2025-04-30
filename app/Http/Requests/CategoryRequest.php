@@ -35,7 +35,7 @@ class CategoryRequest extends FormRequest
         switch ($routeName) {
             case 'admins.categories.store':
                 $baseRules = [
-                    'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
+                    'image' => 'required|image|mimes:jpeg,png,jpg|max:1024',
                     'discount' => 'nullable|numeric|min:0',
                 ];
                 break;
@@ -48,7 +48,7 @@ class CategoryRequest extends FormRequest
                 break;
             case 'admins.subCategories.store':
                  $baseRules = [
-                    'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
+                    'image' => 'required|image|mimes:jpeg,png,jpg|max:1024',
                     'parent_id' => 'required|exists:categories,id',
                  ];
                 break;

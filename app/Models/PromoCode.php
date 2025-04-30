@@ -57,6 +57,14 @@ class PromoCode extends Model
                 $query->where('id', request()->get('id'));
         }
 
-
+        if (request()->has('countries') && request()->get('countries') != null) {
+            $countryIds = request()->get('countries');
+            $query->where(function ($q) use ($countryIds) {
+                $q->where('all_countries', 1)
+                    ->orWhereHas('promoCodeCountries', function ($subQuery) use ($countryIds) {
+                        $subQuery->whereIn('country_id', $countryIds);
+                    });
+            });
+        }
     }
 }

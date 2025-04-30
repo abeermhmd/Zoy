@@ -93,6 +93,7 @@ class ScheduledNewsletterCommand extends Command
                     }
 
                     $newsletter->status = 'delivered';
+                    $newsletter->total_recipients = $subscribers->count();
                     $newsletter->save();
                 } catch (Exception $e) {
                     $this->error("Error processing newsletter ID: {$newsletter->id}: " . $e->getMessage());

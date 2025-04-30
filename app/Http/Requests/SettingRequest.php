@@ -33,10 +33,6 @@ class SettingRequest extends FormRequest
             'dashboard_paginate' => 'required|numeric',
             'website_paginate' => 'required|numeric',
             'instagram' => 'required|url',
-            'area' => 'required',
-            'block' => 'required',
-            'street' => 'required',
-            'address' => 'required',
             'map_location_pinpoint' => 'required',
             'BHD' => 'required|numeric|min:0',
             'OMR' => 'required|numeric|min:0',
@@ -48,6 +44,10 @@ class SettingRequest extends FormRequest
         $languageRules = array_reduce($this->locales->toArray(), function ($rules, $locale) {
             $rules['title_' . $locale] = 'required';
             $rules['instagram_text_footer_' . $locale] = 'required';
+            $rules['area_' . $locale] = 'required';
+            $rules['block_' . $locale] = 'required';
+            $rules['street_' . $locale] = 'required';
+            $rules['address_' . $locale] = 'required';
             return $rules;
         }, []);
         return array_merge($baseRules, $languageRules);

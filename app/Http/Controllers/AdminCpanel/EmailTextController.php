@@ -23,7 +23,7 @@ class EmailTextController extends Controller
     }
     public function index()
     {
-        $emailTexts  = EmailText::get();
+        $emailTexts  = EmailText::filter()->get();
         return view('adminCpanel.emailTexts.home', ['emailTexts' => $emailTexts]);
     }
     public function edit($id)

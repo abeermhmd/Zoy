@@ -5,7 +5,7 @@ namespace App\Http\Controllers\AdminCpanel;
 use App\Http\Controllers\Controller;
 use App\Services\Notifications\NotificationService;
 use Illuminate\Http\Request;
-use App\Models\{EmailText, Language, Order, Setting, User};
+use App\Models\{EmailText, Language, Order, Setting, Country};
 
 class OrderController extends Controller
 {
@@ -26,8 +26,9 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         updateFirebase('reset');
+        $countries = Country::active()->get();
         $items = Order::query()->filter()->orderBy('id', 'desc')->where('payment_status', 1)->paginate($this->settings->paginate);
-        return view('adminCpanel.orders.home', compact('items'));
+        return view('adminCpanel.orders.home', compact('items','countries'));
     }
 
     public function edit($id)
@@ -39,7 +40,8 @@ class OrderController extends Controller
     public function show($id)
     {
         $order = Order::where('payment_status', 1)->with('products')->findOrFail($id);
-        return view('adminCpanel.orders.invoice', compact('order'));
+        $emailText = EmailText::where('type', 'invoice')->first();
+        return view('adminCpanel.orders.invoice', compact('order', 'emailText'));
     }
 
     public function update(Request $request, $id)

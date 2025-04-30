@@ -4,17 +4,20 @@
 
 namespace App\Models;
 
+use App\Traits\WithFilters;
 use Astrotomic\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EmailText extends Model
 {
-    use SoftDeletes, Translatable;
+    use SoftDeletes, Translatable , WithFilters;
     protected $guarded = [];
     public $translatedAttributes = ['subject','content'];
     protected $appends = ['type_name'];
-
+    protected $filterableFields = [
+        'status' => ['operator' => '=', 'method' => 'where', 'allowed' => ['active', 'not_active']],
+    ];
     public function getTypeNameAttribute(): string
     {
         return match ($this->type) {
@@ -24,6 +27,7 @@ class EmailText extends Model
             'Uncompleted_orders' => __('cp.Uncompleted_orders'),
             'Birthday' => __('cp.Birthday'),
             'After_Registration' => __('cp.After_Registration'),
+            'invoice' => __('cp.invoice'),
             default => __('website.unknown_status'),
         };
     }

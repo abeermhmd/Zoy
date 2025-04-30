@@ -28,7 +28,7 @@ class PromoCodeRequest extends FormRequest
         return [
             'countries' => 'required',
             'code' => 'required',
-            'discount_percentage' => 'required|regex:/^\d*(\.\d{2})?$/',
+            'discount_percentage' => 'required|min:0|max:100|regex:/^\d*(\.\d{2})?$/',
             'maximum_usage' => 'required|integer|min:1',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
