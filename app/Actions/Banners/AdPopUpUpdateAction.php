@@ -10,7 +10,7 @@ class AdPopUpUpdateAction
 {
     public static function execute( $settings,AdPopUpDataTransfer $data)
     {
-        DB::transaction(function () use (  $settings , $data) {
+        DB::transaction(function () use ($settings , $data) {
             $service = app(BannerService::class);
             if ($data->ad_popUp_image) {
                 $settings->ad_popUp_image = $service->storeImage($data->ad_popUp_image, 'settings',

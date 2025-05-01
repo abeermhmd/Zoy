@@ -1,11 +1,11 @@
 <?php
 
 namespace App\DataTransferObjects\Banners;
-use App\Traits\fromRequest;
+use App\Traits\FromRequest;
 use Illuminate\Http\UploadedFile;
 class BannerDataTransfer
 {
-    use fromRequest;
+    use FromRequest;
     public function __construct(
         public readonly int  $type,
         public readonly int $type_link,

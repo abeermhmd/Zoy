@@ -2,60 +2,48 @@
 
 namespace App\Services;
 
-use App\Models\{Admin,UserPermission};
+use App\Models\Admin;
+use App\Actions\Admins\{CreateAdminAction,
+    UpdateAdminAction,
+    GetAdminAction,
+    GetAdminsAction,
+    UpdateMyPasswordAdminAction
+};
+use App\Contracts\AdminContract;
+use App\DataTransferObjects\Admin\{AdminDataTransfer, AdminFilterDataTransfer};
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
-class AdminService {
-    public function createAdmin($data): Admin
+class AdminService implements AdminContract
+{
+
+    public function getAdmins(?AdminFilterDataTransfer $filters = null): LengthAwarePaginator|Collection
     {
-        $newAdmin = Admin::create([
-            'name' => $data->name,
-            'email' => $data->email,
-            'mobile' => $data->mobile,
-            'password' => bcrypt($data->password),
-            'status' => 'active',
-        ]);
-
-        if ($data->permissions) {
-            $roles = implode(',', $data->permissions);
-            UserPermission::create([
-                'user_id' => $newAdmin->id,
-                'permission' => $roles
-            ]);
-        }
-
-        return $newAdmin;
-    }
-    public function updateAdmin(Admin $admin, $data): void {
-
-            $admin->update([
-                'name' => $data->name,
-                'email' => $data->email,
-                'mobile' => $data->mobile,
-            ]);
-
-            if ($data->permissions) {
-                $roles = implode(',', $data->permissions);
-                UserPermission::updateOrCreate(
-                    ['user_id' => $admin->id],
-                    ['permission' => $roles]
-            );
-        }
+        return GetAdminsAction::execute($filters);
     }
 
-    public function updateProfileAdmin(Admin $admin, $data): void
+    public function getAdmin(string $id): Admin
     {
-        $admin->update([
-            'name' => $data->name,
-            'mobile' => $data->mobile,
-            'email' => $data->email,
-        ]);
+        return GetAdminAction::execute($id);
     }
 
-    public function updatePasswordAdmin(Admin $admin, $data): void
+    public function createAdmin(AdminDataTransfer $data): void
     {
-        if ($data->password) {
-            $admin->password = bcrypt(request()->input('password'));
-            $admin->save();
-        }
+        CreateAdminAction::execute($data);
+    }
+
+    public function updateAdmin(Admin $admin, AdminDataTransfer $data): void
+    {
+        UpdateAdminAction::execute($admin, $data);
+    }
+
+    public function updateProfileAdmin(Admin $admin, AdminDataTransfer $data): void
+    {
+        UpdateAdminAction::execute($admin, $data);
+    }
+
+    public function updateMyPassword(Admin $admin, AdminDataTransfer $data): void
+    {
+        UpdateMyPasswordAdminAction::execute($admin, $data);
     }
 }

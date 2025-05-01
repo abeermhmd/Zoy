@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Contracts\AdminContract;
 use App\Contracts\BannerContract;
+use App\Services\AdminService;
 use App\Services\BannerService;
 use App\Models\{Category, Language, Setting};
 use Illuminate\Support\ServiceProvider;
@@ -14,8 +16,18 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->bind(PaymentGatewayInterface::class, MyFatoorahPayment::class);
-        $this->app->bind(BannerContract::class, BannerService::class);
+        $this->bindServices([
+            PaymentGatewayInterface::class => MyFatoorahPayment::class,
+            BannerContract::class => BannerService::class,
+            AdminContract::class => AdminService::class,
+        ]);
+    }
+
+    private function bindServices(array $bindings): void
+    {
+        foreach ($bindings as $abstract => $concrete) {
+            $this->app->bind($abstract, $concrete);
+        }
     }
 
     public function boot(): void

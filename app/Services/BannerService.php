@@ -8,6 +8,7 @@ use App\Contracts\BannerContract;
 use App\DataTransferObjects\Banners\AdPopUpDataTransfer;
 use App\DataTransferObjects\Banners\BannerAdDataTransfer;
 use App\DataTransferObjects\Banners\BannerDataTransfer;
+use App\DataTransferObjects\Banners\BannerFilterDataTransfer;
 use App\Models\{Banner,Setting };
 use App\Traits\ImageTrait;
 use App\TypeLinkBanner;
@@ -18,7 +19,7 @@ class BannerService implements BannerContract
 {
     use ImageTrait;
 
-    public function getBanners(?array $filters = null): LengthAwarePaginator|Collection
+    public function getBanners(?BannerFilterDataTransfer $filters = null): LengthAwarePaginator|Collection
     {
         return GetBannersAction::execute($filters);
     }
@@ -35,19 +36,19 @@ class BannerService implements BannerContract
 
     public function updateBanner(Banner $banner, BannerDataTransfer $data): void
     {
-        UpdateBannerAction::execute($this , $banner, $data);
+        UpdateBannerAction::execute($banner, $data);
     }
 
     public function bannerAdUpdate(BannerAdDataTransfer $data): void
     {
         $settings = Setting::first();
-        BannerAdUpdateAction::execute($this,$settings, $data);
+        BannerAdUpdateAction::execute($settings, $data);
     }
 
     public function adPopUpUpdate(AdPopUpDataTransfer $data): void
     {
         $settings = Setting::first();
-       AdPopUpUpdateAction::execute($this,$settings, $data);
+       AdPopUpUpdateAction::execute($settings, $data);
     }
 
     public function typeLink(BannerDataTransfer|AdPopUpDataTransfer|BannerAdDataTransfer $data)

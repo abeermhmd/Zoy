@@ -2,22 +2,19 @@
 
 namespace App\Actions\Banners;
 
+use App\DataTransferObjects\Banners\BannerFilterDataTransfer;
 use App\Models\Banner;
-use App\Services\Actions\DataTransferObjects\BannerFilterDataTransfer;
 
 class GetBannersAction
 {
-    public static function execute($filters)
+    public static function execute(BannerFilterDataTransfer $filters)
     {
-        $filters = $filters ?? [];
         $query = Banner::filter($filters);
-
-        if ($filters['isPaginate'] ?? false) {
+        if ($filters->isPaginate) {
             $perPage = get_setting('dashboard_paginate');
-            $banners = $query->paginate($perPage);
-            return $banners->appends(request()->query());
-        } else {
-            return $query->get();
+            return $query->paginate($perPage)->appends(request()->query());
         }
+        return $query->get();
     }
+
 }
