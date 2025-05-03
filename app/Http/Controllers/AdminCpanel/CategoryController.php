@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\AdminCpanel;
 
+use App\Contracts\CategoryContract;
+use App\DataTransferObjects\Categories\CategoryDataTransfer;
+use App\DataTransferObjects\Categories\CategoryFilterDataTransfer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\{Category, Setting};
@@ -10,47 +13,51 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function __construct(CategoryService $categoryService)
+    public function __construct(protected CategoryContract $categoryContract)
     {
-        $this->settings = Setting::query()->first();
-        $this->categoryService = $categoryService;
         $this->middleware(function ($request, $next) {
-            if (!can('categories')) { return redirect()->back()->with('permissions', __('cp.no_permission'));}
+            if (!can('categories')) {
+                return redirect()->back()->with('permissions', __('cp.no_permission'));
+            }
             return $next($request);
         });
     }
 
     public function index()
     {
-        $items = Category::query()->where('parent_id' , null)->filter()->orderBy('id', 'desc')->paginate($this->settings->dashboard_paginate);
-        return view('adminCpanel.categories.home',compact('items'));
+        $dtoFilter = CategoryFilterDataTransfer::fromRequest(request());
+        $items = $this->categoryContract->getCategories($dtoFilter);
+        return view('adminCpanel.categories.home', compact('items'));
     }
 
     public function create()
     {
         $item = new Category();
-        return view('adminCpanel.categories.create' , compact('item'));
+        return view('adminCpanel.categories.create', compact('item'));
     }
 
     public function store(CategoryRequest $request)
     {
-        $this->categoryService->createCategory($request);
+        $dtoData = CategoryDataTransfer::fromRequest($request);
+        $this->categoryContract->createCategory($dtoData);
         return redirect()->back()->with('status', __('cp.create'));
     }
 
 
     public function edit($id)
     {
-        $item = Category::query()->findOrFail($id);
+        $item = $this->categoryContract->getCategory($id);
         return view('adminCpanel.categories.edit', compact('item'));
     }
 
     public function update(CategoryRequest $request, $id)
     {
-        $item = Category::findOrFail($id);
-        $this->categoryService->updateCategory($item , $request);
+        $dtoData = CategoryDataTransfer::fromRequest($request);
+        $item = $this->categoryContract->getCategory($id);
+        $this->categoryContract->updateCategory($item, $dtoData);
         return redirect()->back()->with('status', __('cp.update'));
     }
+
     public function toggleFeatured(Request $request)
     {
         $category = Category::findOrFail($request->id);

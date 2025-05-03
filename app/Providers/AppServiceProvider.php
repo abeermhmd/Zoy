@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Contracts\AdminContract;
-use App\Contracts\BannerContract;
-use App\Services\AdminService;
-use App\Services\BannerService;
+use App\Contracts\{AdminContract, BannerContract, CategoryContract, SubCategoryContract};
+use App\Services\{AdminService, BannerService, CategoryService, SubCategoryService};
 use App\Models\{Category, Language, Setting};
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Cache;
@@ -18,8 +16,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->bindServices([
             PaymentGatewayInterface::class => MyFatoorahPayment::class,
-            BannerContract::class => BannerService::class,
             AdminContract::class => AdminService::class,
+            BannerContract::class => BannerService::class,
+            CategoryContract::class => CategoryService::class,
+            SubCategoryContract::class => SubCategoryService::class,
         ]);
     }
 

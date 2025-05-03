@@ -2,7 +2,7 @@
 
 namespace App\Actions\Admins;
 
-use App\DataTransferObjects\Admin\AdminDataTransfer;
+use App\DataTransferObjects\Admins\AdminDataTransfer;
 use App\Models\Admin;
 use Illuminate\Support\Facades\DB;
 

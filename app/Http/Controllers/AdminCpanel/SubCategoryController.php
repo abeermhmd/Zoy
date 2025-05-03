@@ -2,55 +2,64 @@
 
 namespace App\Http\Controllers\AdminCpanel;
 
+use App\DataTransferObjects\SubCategories\SubCategoryDataTransfer;
+use App\Models\Category;
+use App\Contracts\{CategoryContract, SubCategoryContract};
+use App\DataTransferObjects\Categories\CategoryFilterDataTransfer;
+use App\DataTransferObjects\SubCategories\SubCategoryFilterDataTransfer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
-use App\Models\{Category, Setting};
-use App\Services\CategoryService;
 
 class SubCategoryController extends Controller
 {
-    public function __construct(CategoryService $categoryService)
+    public function __construct(protected SubCategoryContract $subCategoryContract,
+                                protected CategoryContract    $categoryContract)
     {
-        $this->settings = Setting::query()->first();
-        $this->categoryService = $categoryService;
         $this->middleware(function ($request, $next) {
-            if (!can('categories')) { return redirect()->back()->with('permissions', __('cp.no_permission'));}
+            if (!can('categories')) {
+                return redirect()->back()->with('permissions', __('cp.no_permission'));
+            }
             return $next($request);
         });
     }
 
     public function index()
     {
-        $items = Category::query()->filter()->where('parent_id' ,'!=' ,null)->orderBy('id', 'desc')->paginate($this->settings->dashboard_paginate);
-        $categories = Category::query()->where('parent_id'  ,null)->orderBy('id', 'desc')->get();
-        return view('adminCpanel.subCategories.home',compact('items','categories'));
+        $dtoFilterData = SubCategoryFilterDataTransfer::fromRequest(request());
+        $items = $this->subCategoryContract->getSubCategories($dtoFilterData);
+        $mainCategoriesFilter = new CategoryFilterDataTransfer(isPaginate: false, status: 'active');
+        $categories = $this->categoryContract->getCategories($mainCategoriesFilter);
+        return view('adminCpanel.subCategories.home', compact('items', 'categories'));
     }
 
     public function create()
     {
+        $mainCategoriesFilter = new CategoryFilterDataTransfer(isPaginate: false, status: 'active');
+        $mainCategories = $this->categoryContract->getCategories($mainCategoriesFilter);
         $item = new Category();
-        $mainCategories = Category::active()->where('parent_id' , null)->get();
-        return view('adminCpanel.subCategories.create' , compact('item' ,'mainCategories'));
+        return view('adminCpanel.subCategories.create', compact('item', 'mainCategories'));
     }
 
     public function store(CategoryRequest $request)
     {
-        $this->categoryService->createSubCategory($request);
+        $dtoSubCat = SubCategoryDataTransfer::fromRequest($request);
+        $this->subCategoryContract->createSubCategory($dtoSubCat);
         return redirect()->back()->with('status', __('cp.create'));
     }
 
-
     public function edit($id)
     {
-        $item = Category::query()->findOrFail($id);
-        $mainCategories = Category::active()->where('parent_id' , null)->get();
-        return view('adminCpanel.subCategories.edit', compact('item','mainCategories'));
+        $item = $this->subCategoryContract->getSubCategory($id);
+        $mainCategoriesFilter = new CategoryFilterDataTransfer(isPaginate: false, status: 'active');
+        $mainCategories = $this->categoryContract->getCategories($mainCategoriesFilter);
+        return view('adminCpanel.subCategories.edit', compact('item', 'mainCategories'));
     }
 
     public function update(CategoryRequest $request, $id)
     {
-        $item = Category::findOrFail($id);
-        $this->categoryService->updateSubCategory($item , $request);
+        $dtoSubCat = SubCategoryDataTransfer::fromRequest($request);
+        $item = $this->subCategoryContract->getSubCategory($id);
+        $this->subCategoryContract->updateSubCategory($item, $dtoSubCat);
         return redirect()->back()->with('status', __('cp.update'));
     }
 }

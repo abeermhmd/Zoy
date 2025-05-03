@@ -2,7 +2,7 @@
 
 namespace App\Actions\Admins;
 
-use App\DataTransferObjects\Admin\AdminFilterDataTransfer;
+use App\DataTransferObjects\Admins\AdminFilterDataTransfer;
 use App\Models\Admin;
 
 class GetAdminsAction

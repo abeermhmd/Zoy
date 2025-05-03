@@ -10,7 +10,7 @@ use App\Actions\Admins\{CreateAdminAction,
     UpdateMyPasswordAdminAction
 };
 use App\Contracts\AdminContract;
-use App\DataTransferObjects\Admin\{AdminDataTransfer, AdminFilterDataTransfer};
+use App\DataTransferObjects\Admins\{AdminDataTransfer, AdminFilterDataTransfer};
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 

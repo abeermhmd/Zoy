@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataTransferObjects\Admin;
+namespace App\DataTransferObjects\Admins;
 
 use App\Traits\FromRequest;
 

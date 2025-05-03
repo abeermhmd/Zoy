@@ -2,37 +2,48 @@
 
 namespace App\Services;
 
+use App\Actions\SubCategories\{CreateSubCategoryAction,
+    GetSubCategoriesAction,
+    GetSubCategoryAction,
+    UpdateSubCategoryAction};
+use App\Contracts\SubCategoryContract;
+use App\DataTransferObjects\SubCategories\{SubCategoryDataTransfer, SubCategoryFilterDataTransfer};
 use App\Models\Category;
 use App\Traits\ImageTrait;
-use Illuminate\Support\Facades\DB;
 
-class SubCategoryService {
+class SubCategoryService implements SubCategoryContract
+{
     use ImageTrait;
-    public function createCategory($data): void
-    {
-        DB::transaction(function () use ($data) {
-            $newItem = new Category();
-            $newItem->image = $this->storeImage($data->file('image'), 'categories');
-            $newItem->discount = $data['discount'] ?? 0;
-            $newItem->is_featured = $data->has('is_featured') && $data->is_featured == 'on' ? 'yes' : 'no';
-            $newItem->department = $data->has('department') && $data->department == 'man' ? 'man' : 'women';
-            storeTranslatedFields($newItem , ['name','key_words'] , $data);
-            $newItem->save();
-        });
-    }
-    public function updateCategory(Category $item, $data): void
-    {
-        DB::transaction(function () use ($data , $item) {
-            if ($data->hasFile('image')) {
-                $item->image = $this->storeImage($data->file('image'), 'categories' , $item->getRawOriginal('image') ?
-                $item->getRawOriginal('image') : null);
-            }
-            storeTranslatedFields($item , ['name','key_words'] , $data );
-            $item->discount = $data['discount'] ?? 0;
-            $item->is_featured = isset($data->is_featured) && $data->is_featured == "on" ? 'yes' : 'no';
-            $item->department = $data->has('department') && $data->department == 'man' ? 'man' : 'women';
-            $item->save();
-        });
 
+    public function getSubCategories(?SubCategoryFilterDataTransfer $filters = null)
+    {
+       return GetSubCategoriesAction::execute($filters);
     }
+
+    public function getSubCategory(string $id)
+    {
+       return GetSubCategoryAction::execute($id);
+    }
+
+    public function createSubCategory(SubCategoryDataTransfer $data)
+    {
+         CreateSubCategoryAction::execute($data);
+    }
+
+    public function updateSubCategory(Category $category, SubCategoryDataTransfer $data)
+    {
+        UpdateSubCategoryAction::execute($category, $data);
+    }
+
+    public function updateParentCategoryFeaturedStatus($parentId): void
+    {
+        if ($parentId) {
+            $parentCategory = Category::findOrFail($parentId);
+            if ($parentCategory && $parentCategory->is_featured == 'yes') {
+                $parentCategory->is_featured = 'no';
+                $parentCategory->save();
+            }
+        }
+    }
+
 }

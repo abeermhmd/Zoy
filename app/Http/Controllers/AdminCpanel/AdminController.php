@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\AdminCpanel;
 
 use App\Contracts\AdminContract;
-use App\DataTransferObjects\Admin\{AdminDataTransfer, AdminFilterDataTransfer};
+use App\DataTransferObjects\Admins\{AdminDataTransfer, AdminFilterDataTransfer};
 use App\Http\Requests\AdminRequest;
 use App\Models\{Admin, Permission, UserPermission};
 use App\Http\Controllers\Controller;

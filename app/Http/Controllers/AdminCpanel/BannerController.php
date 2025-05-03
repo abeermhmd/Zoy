@@ -6,7 +6,8 @@ use App\DataTransferObjects\Banners\{AdPopUpDataTransfer,
     BannerAdDataTransfer,
     BannerDataTransfer,
     BannerFilterDataTransfer};
-use App\Contracts\BannerContract;
+use App\Contracts\{BannerContract , CategoryContract};
+use App\DataTransferObjects\Categories\CategoryFilterDataTransfer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BannerRequest;
 use App\Models\{Category ,Product};
@@ -15,7 +16,9 @@ use Illuminate\View\View;
 
 class BannerController extends Controller
 {
-    public function __construct(protected readonly BannerContract $bannerContract){}
+    public function __construct(
+        protected readonly BannerContract $bannerContract,
+        protected readonly CategoryContract $categoryContract){}
 
     public function index(): View
     {
@@ -26,7 +29,8 @@ class BannerController extends Controller
 
     public function create(): View
     {
-        $main_categories = Category::active()->where('parent_id' , null)->get();
+        $mainCategoriesFilter = new CategoryFilterDataTransfer( isPaginate: false, status: 'active');
+        $main_categories =  $this->categoryContract->getCategories($mainCategoriesFilter);
         $sub_categories = Category::active()->where('parent_id' , '!=',null)->get();
         $products = Product::active()->orderByDesc('id')->get();
         return view('adminCpanel.banners.create', compact('main_categories' ,'sub_categories' ,'products'));
@@ -43,7 +47,8 @@ class BannerController extends Controller
     public function edit($id): View
     {
         $item = $this->bannerContract->getBanner($id);
-        $main_categories = Category::active()->where('parent_id' , null)->get();
+        $mainCategoriesFilter = new CategoryFilterDataTransfer( isPaginate: false,status: 'active');
+        $main_categories =  $this->categoryContract->getCategories($mainCategoriesFilter);
         $sub_categories = Category::active()->where('parent_id' , '!=',null)->get();
         $products = Product::active()->orderByDesc('id')->get();
         return view('adminCpanel.banners.edit', compact('item','main_categories' ,'sub_categories' ,'products'));
@@ -59,7 +64,11 @@ class BannerController extends Controller
 
     public function bannerAd(): View
     {
-         $main_categories = Category::active()->where('parent_id' , null)->get();
+        $mainCategoriesFilter = new CategoryFilterDataTransfer( isPaginate: false,
+            status: 'active'
+        );
+
+        $main_categories =  $this->categoryContract->getCategories($mainCategoriesFilter);
          $sub_categories = Category::active()->where('parent_id' , '!=',null)->get();
          $products = Product::active()->orderByDesc('id')->get();
         return view('adminCpanel.banners.bannerAd', compact('main_categories' ,'sub_categories' ,'products'));
@@ -85,4 +94,5 @@ class BannerController extends Controller
         $this->bannerContract->adPopUpUpdate($adPopUpDto);
         return redirect()->back()->with('status', __('cp.update'));
     }
+
 }

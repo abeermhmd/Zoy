@@ -3,8 +3,10 @@
 use App\Models\Language;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Setting;
+
 function storeTranslatedFields($model, $fieldNames, $data)
 {
+
     if (is_null($model) || is_null($fieldNames) || is_null($data)) {
         return;
     }
@@ -14,9 +16,8 @@ function storeTranslatedFields($model, $fieldNames, $data)
     collect($fieldNames)->map(function ($fieldName) use ($model, $locales, $data) {
         $locales->map(function ($locale) use ($fieldName, $model, $data) {
             $translatedField = $fieldName . '_' . $locale;
-
-            if ($data->has($translatedField) && !is_null($data->get($translatedField))) {
-                $model->translateOrNew($locale)->{$fieldName} = $data->get($translatedField);
+            if (property_exists($data, $translatedField)) {
+                $model->translateOrNew($locale)->{$fieldName} = $data->{$translatedField};
             }
         });
     });

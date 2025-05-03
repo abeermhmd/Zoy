@@ -2,8 +2,7 @@
 
 namespace App\Contracts;
 
-use App\DataTransferObjects\Admin\AdminDataTransfer;
-use App\DataTransferObjects\Admin\AdminFilterDataTransfer;
+use App\DataTransferObjects\Admins\{AdminDataTransfer,AdminFilterDataTransfer};
 use App\Models\Admin;
 
 interface AdminContract
