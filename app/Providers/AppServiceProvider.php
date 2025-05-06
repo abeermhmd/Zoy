@@ -2,13 +2,24 @@
 
 namespace App\Providers;
 
-use App\Contracts\{AdminContract, BannerContract, CategoryContract, SubCategoryContract};
-use App\Services\{AdminService, BannerService, CategoryService, SubCategoryService};
+use App\Contracts\{AdminContract,
+    BannerContract,
+    CategoryContract,
+    ColorContract,
+    ProductContract,
+    SizeContract,
+    SubCategoryContract};
+use App\Services\{AdminService,
+    BannerService,
+    CategoryService,
+    ColorService,
+    ProductService,
+    SizeService,
+    SubCategoryService};
 use App\Models\{Category, Language, Setting};
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Cache;
 use App\Services\Payment\{MyFatoorahPayment, PaymentGatewayInterface};
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\{Schema, Cache};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
             BannerContract::class => BannerService::class,
             CategoryContract::class => CategoryService::class,
             SubCategoryContract::class => SubCategoryService::class,
+            ColorContract::class => ColorService::class,
+            SizeContract::class => SizeService::class,
+            ProductContract::class => ProductService::class,
         ]);
     }
 
@@ -52,7 +66,6 @@ class AppServiceProvider extends ServiceProvider
             Cache::forever('currency', $setting);
         }
     }
-
     private function shareViewData(?object $setting): void
     {
         view()->composer('*', function ($view) use ($setting) {

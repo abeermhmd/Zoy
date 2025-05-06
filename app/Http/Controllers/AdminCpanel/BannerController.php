@@ -6,7 +6,8 @@ use App\DataTransferObjects\Banners\{AdPopUpDataTransfer,
     BannerAdDataTransfer,
     BannerDataTransfer,
     BannerFilterDataTransfer};
-use App\Contracts\{BannerContract , CategoryContract};
+use App\DataTransferObjects\SubCategories\SubCategoryFilterDataTransfer;
+use App\Contracts\{BannerContract, CategoryContract, SubCategoryContract};
 use App\DataTransferObjects\Categories\CategoryFilterDataTransfer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BannerRequest;
@@ -18,7 +19,8 @@ class BannerController extends Controller
 {
     public function __construct(
         protected readonly BannerContract $bannerContract,
-        protected readonly CategoryContract $categoryContract){}
+        protected readonly CategoryContract $categoryContract,
+        protected readonly SubCategoryContract $subcategoryContract,){}
 
     public function index(): View
     {
@@ -31,7 +33,8 @@ class BannerController extends Controller
     {
         $mainCategoriesFilter = new CategoryFilterDataTransfer( isPaginate: false, status: 'active');
         $main_categories =  $this->categoryContract->getCategories($mainCategoriesFilter);
-        $sub_categories = Category::active()->where('parent_id' , '!=',null)->get();
+        $subCategoriesFilter = new SubCategoryFilterDataTransfer( isPaginate: false, status: 'active');
+        $sub_categories = $this->subcategoryContract->getSubCategories($subCategoriesFilter);
         $products = Product::active()->orderByDesc('id')->get();
         return view('adminCpanel.banners.create', compact('main_categories' ,'sub_categories' ,'products'));
     }
@@ -64,9 +67,7 @@ class BannerController extends Controller
 
     public function bannerAd(): View
     {
-        $mainCategoriesFilter = new CategoryFilterDataTransfer( isPaginate: false,
-            status: 'active'
-        );
+        $mainCategoriesFilter = new CategoryFilterDataTransfer( isPaginate: false, status: 'active' );
 
         $main_categories =  $this->categoryContract->getCategories($mainCategoriesFilter);
          $sub_categories = Category::active()->where('parent_id' , '!=',null)->get();

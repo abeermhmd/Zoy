@@ -23,6 +23,10 @@
                             <i class="icon-xl la la-file-excel"></i>
                             <span>{{__('cp.export')}}</span>
                         </a>
+                        <a href="{{ url(getLocal().'/admin/exportOrders?type=csv&') }}@foreach(request()->query() as $key => $one){{$key}}={{$one}}&@endforeach"
+                           class="btn btn-secondary mr-2 btn-success">
+                            <i class="icon-xl la la-file-excel"></i> <span>{{__('cp.exportCSV')}}</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -121,6 +125,20 @@
                                                         {{__('website.cancelled')}}
                                                     </option>
 
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label">{{__('cp.country')}}</label>
+                                                <select class="select2 form-control" name="country_id">
+                                                    <option disabled>{{__('cp.select')}}</option>
+                                                    @foreach($countries as $oneCoun)
+                                                        <option value="{{ $oneCoun->id }}"
+                                                            {{ $oneCoun->id == request('country_id') ? 'selected' : '' }}>
+                                                            {{ @$oneCoun->name }}
+                                                        </option>
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>

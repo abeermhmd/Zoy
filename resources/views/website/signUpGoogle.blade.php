@@ -57,7 +57,7 @@
                     @enderror
                     <div class="form-group form-calender">
                         <input type="text" id="dateInput" name="date_of_birth" class="form-control" value="{{ old('date_of_birth') }}"
-                               placeholder="@lang('website.Date of birth') *" required />
+                               placeholder="@lang('website.Date of birth') *" required readonly/>
                         <i class="icon-calender"></i>
                     </div>
                     @error('date_of_birth')
@@ -214,7 +214,7 @@
                 for (let field in errors) {
                     const element = document.querySelector(`[name="${field}"]`);
                     if (element) {
-                        showError(element, errors[field][0]);
+                        showError(element, errors[field]);
                     }
                 }
             }

@@ -115,7 +115,7 @@
                                         </div>
                                     </th>
                                     <th class="wd-25p"> {{ucwords(__('cp.name'))}}</th>
-                                    <th class="wd-25p"> Hex Code</th>
+                                    <th class="wd-25p">{{ucwords(__('cp.color_code'))}}</th>
                                     <th class="wd-10p"> {{ucwords(__('cp.status'))}}</th>
                                     <th class="wd-10p"> {{ucwords(__('cp.created'))}}</th>
                                     <th class="wd-15p"> {{ucwords(__('cp.action'))}}</th>

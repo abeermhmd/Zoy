@@ -73,7 +73,7 @@
                         <div class="payment-method wow fadeInUp">
                             <h5>@lang('website.Payment Method')</h5>
                             <div class="list-pay">
-                                <div class="check--accept">
+                                <div class="check--accept knet">
                                     <input class="inp-cbx" id="knet" name="payments" value="1" type="radio" checked="">
                                     <label class="con-che" for="knet">
                                         <div class="sec-title">
@@ -256,6 +256,9 @@
 @section('js')
     <script>
         $(document).ready(function () {
+            $(".knet").addClass("d-none");
+            $("input[name='payments']").prop("checked", false);
+
             function setupCountryChangeHandler(formSelector) {
                 $(formSelector + " .country_id").on("change", function () {
                     var countryId = $(this).val();
@@ -459,6 +462,16 @@
                         $('.final_total').html(response.final_total+' '+" {{Session::get('country_currency') != '' ?__('website.'.Session::get('country_currency')) : __('website.KWD')}}");
                         $('.delivery_fees').html(response.delivery_charge+' '+" {{Session::get('country_currency') != '' ?__('website.'.Session::get('country_currency')) : __('website.KWD')}}");
                         $('.discount_amount').html(response.discount+' '+" {{Session::get('country_currency') != '' ?__('website.'.Session::get('country_currency')) : __('website.KWD')}}");
+
+                        if (response.country_id == 1) { // Assuming country ID 1 is Kuwait
+                            $(".knet").removeClass("d-none");
+                            $("input[name='payments']").prop("checked", false); // Uncheck all payment methods
+                            $("#knet").prop("checked", true); // Select KNET
+                        } else {
+                            $(".knet").addClass("d-none");
+                            $("input[name='payments']").prop("checked", false); // Uncheck all payment methods
+                            $("#visa").prop("checked", true); // Select Visa
+                        }
                         return ;
 
                     } else if(response.code==201){

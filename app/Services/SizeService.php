@@ -2,24 +2,32 @@
 
 namespace App\Services;
 
+use App\Actions\Sizes\{CreateSizeAction, UpdateSizeAction, GetSizeAction, GetSizesAction};
+use App\Contracts\SizeContract;
+use App\DataTransferObjects\Sizes\{SizeDataTransfer, SizeFilterDataTransfer};
 use App\Models\Size;
-use Illuminate\Support\Facades\DB;
 
-class SizeService {
-    public function createSize($data): void
+class SizeService implements SizeContract
+{
+
+    public function getSizes(?SizeFilterDataTransfer $filters = null)
     {
-        DB::transaction(function () use ($data) {
-            $newItem = new Size();
-            storeTranslatedFields($newItem , ['name'] , $data);
-            $newItem->save();
-        });
+        return GetSizesAction::execute($filters);
     }
-    public function updateSize(Size $item, $data): void
+
+    public function getSize(string $id)
     {
-        DB::transaction(function () use ($data , $item) {
-            storeTranslatedFields($item , ['name'] , $data );
-            $item->save();
-        });
+        return GetSizeAction::execute($id);
+    }
+
+    public function createSize(SizeDataTransfer $data)
+    {
+        CreateSizeAction::execute($data);
+    }
+
+    public function updateSize(Size $Size, SizeDataTransfer $data)
+    {
+        UpdateSizeAction::execute($Size, $data);
     }
 
 }

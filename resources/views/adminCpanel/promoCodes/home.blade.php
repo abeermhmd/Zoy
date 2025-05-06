@@ -1,6 +1,36 @@
 @extends('layout.adminLayout')
 @section('title') {{ucwords(__('cp.promoCodes'))}}
 @endsection
+@section('css')
+    <style>
+        .countries-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .country-row {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 5px;
+            width: 100%;
+        }
+        .badge {
+            flex: 1;
+            min-width: 0;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+            box-sizing: border-box;
+            padding: 6px 12px;
+        }
+        .country-row.single .badge {
+            flex: 0 0 auto;
+            max-width: 200px;
+        }
+    </style>
+@endsection
 @section('content')
     <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
         <!--begin::Subheader-->
@@ -98,7 +128,20 @@
                                                 name="end_date" id="to_date">
                                         </div>
                                     </div>
-
+                                      <div class="col-md-4">
+                                          <div class="form-group">
+                                              <label class="control-label">{{__('cp.country')}}</label>
+                                              <select class="select2 form-control" name="countries[]" multiple>
+                                                  <option disabled>{{__('cp.select')}}</option>
+                                                  @foreach($countries as $oneCoun)
+                                                      <option value="{{ $oneCoun->id }}"
+                                                          {{ in_array($oneCoun->id, request('countries', [])) ? 'selected' : '' }}>
+                                                          {{@$oneCoun->name}}
+                                                      </option>
+                                                  @endforeach
+                                              </select>
+                                          </div>
+                                      </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label">{{__('cp.status')}}</label>
@@ -147,8 +190,10 @@
                                     <th> {{ucwords(__('cp.code'))}}</th>
                                     <th> {{ucwords(__('cp.value'))}}</th>
                                     <th> {{ucwords(__('cp.number_remaining_uses'))}}</th>
+                                    <th> {{ucwords(__('cp.frequency_of_use'))}}</th>
                                     <th> {{ucwords(__('cp.start_date'))}}</th>
                                     <th> {{ucwords(__('cp.end_date'))}}</th>
+                                    <th>{{ucwords(__('cp.countries'))}}</th>
                                     <th> {{ucwords(__('cp.status'))}}</th>
                                     <th> {{ucwords(__('cp.created'))}}</th>
                                     <th> {{ucwords(__('cp.action'))}}</th>
@@ -169,8 +214,32 @@
                                         <td class="v-align-middle wd-25p">{{@$one->code}}</td>
                                         <td class="v-align-middle wd-25p">{{@$one->discount_percentage}} %</td>
                                         <td class="v-align-middle wd-25p">{{@$one->number_remaining_uses}} </td>
+                                        <td class="v-align-middle wd-25p">{{@$one->maximum_usage - $one->number_remaining_uses}} </td>
                                         <td class="v-align-middle wd-25p">{{@$one->start_date}}</td>
                                         <td class="v-align-middle wd-25p">{{@$one->end_date}}</td>
+                                        <td class="v-align-middle wd-25p">
+                                            @if($one->all_countries == 1)
+                                                <div class="countries-container">
+                                                    <div class="country-row single">
+                                                        <span class="badge badge-pill badge-primary">{{__('cp.all')}}</span>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="countries-container">
+                                                    @forelse($one->promoCodeCountries->chunk(2) as $countryChunk)
+                                                        <div class="country-row {{ $countryChunk->count() == 1 ? 'single' : '' }}">
+                                                            @foreach($countryChunk as $promoCountry)
+                                                                <span class="badge badge-pill badge-info">{{@$promoCountry->country->name}}</span>
+                                                            @endforeach
+                                                        </div>
+                                                    @empty
+                                                        <div class="country-row single">
+                                                            <span class="badge badge-pill badge-warning">{{__('cp.no_countries')}}</span>
+                                                        </div>
+                                                    @endforelse
+                                                </div>
+                                            @endif
+                                        </td>
                                         <td class="v-align-middle wd-10p" > <span id="label-{{$one->id}}" class="badge badge-pill badge-{{($one->status == "active")
                                             ? "info" : "danger"}}" id="label-{{$one->id}}">
 

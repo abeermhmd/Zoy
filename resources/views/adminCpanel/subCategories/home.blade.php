@@ -24,10 +24,10 @@
                             <i class="icon-xl la la-ban"></i>
                             <span>{{__('cp.not_active')}}</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" href="#deleteAll" role="button" data-toggle="modal">
-                            <i class="flaticon-delete"></i>
-                            <span>{{__('cp.delete')}}</span>
-                        </button>
+{{--                        <button type="button" class="btn btn-secondary" href="#deleteAll" role="button" data-toggle="modal">--}}
+{{--                            <i class="flaticon-delete"></i>--}}
+{{--                            <span>{{__('cp.delete')}}</span>--}}
+{{--                        </button>--}}
                     </div>
 
                     <a href="{{route('admins.subCategories.create')}}" class="btn btn-secondary  mr-2 btn-success">
@@ -139,11 +139,11 @@
                                                 <input type="checkbox" name="checkAll" /> <span></span></label>
                                         </div>
                                     </th>
+                                    <th> {{ucwords(__('cp.id'))}}</th>
                                     <th> {{ucwords(__('cp.image'))}}</th>
                                     <th> {{ucwords(__('cp.name'))}}</th>
                                     <th> {{ucwords(__('cp.main_category'))}}</th>
                                     <th> {{ucwords(__('cp.is_featured'))}}</th>
-                                    <th> {{ucwords(__('cp.Number of Items'))}}</th>
                                     <th> {{ucwords(__('cp.status'))}}</th>
                                     <th> {{ucwords(__('cp.created'))}}</th>
                                     <th> {{ucwords(__('cp.action'))}}</th>
@@ -159,13 +159,20 @@
                                                     <span></span></label>
                                             </div>
                                         </td>
-
+                                        <td class="v-align-middle wd-25p">{{@$one->id}}</td>
                                         <td class="v-align-middle wd-5p"><img src="{{@$one->image}}" width="50px" height="50px"></td>
 
                                         <td class="v-align-middle wd-25p">{{@$one->name}}</td>
                                         <td class="v-align-middle wd-25p">{{@$one->parent->name}}</td>
-                                        <td class="v-align-middle wd-25p">{{$one->is_featured == 'yes' ? __('cp.yes'):__(key: 'cp.No')}}</td>
-                                        <td class="v-align-middle wd-25p">{{@$one->products->count()}}</td>
+                                        <td class="v-align-middle wd-25p">
+                                            <span class="switch switch-sm switch-icon">
+                                                <label>
+                                                    <input type="checkbox" class="toggle-featured"
+                                                           data-id="{{ $one->id }}" {{ $one->is_featured == 'yes' ? 'checked' : '' }}/>
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                        </td>
                                         <td class="v-align-middle wd-10p" > <span id="label-{{$one->id}}" class="badge badge-pill badge-{{($one->status == "active")
                                             ? "info" : "danger"}}" id="label-{{$one->id}}">
                                             {{__('cp.'.$one->status)}}
@@ -178,6 +185,10 @@
                                             <a href="{{route('admins.subCategories.edit' , @$one->id)}}"
                                                class="btn btn-sm btn-clean btn-icon" title="{{__('cp.edit')}}">
                                                 <i class="la la-edit"></i>
+                                            </a>
+                                            <a href="{{ route('admins.products.index', ['category_id' => $one->id]) }}"
+                                               class="btn btn-sm btn-clean btn-icon" title="{{__('cp.products')}}">
+                                                <i class="la la-dropbox"></i>
                                             </a>
                                         </td>
                                     </tr>
@@ -199,4 +210,38 @@
         </div>
         <!--end::Entry-->
     </div>
+@endsection
+@section('js')
+    <script>
+        $(document).on('focusin', '.toggle-featured', function () {
+            // نحفظ الحالة الأصلية قبل التغيير
+            $(this).data('previous-state', this.checked);
+        });
+
+        $(document).on('change', '.toggle-featured', function () {
+            let $checkbox = $(this);
+            let id = $checkbox.data('id');
+            let originalState = $checkbox.data('previous-state');
+
+            $.ajax({
+                url: '{{ route("admins.categories.toggleFeatured") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: id
+                },
+                success: function (response) {
+                    showSuccessMessage("{{ __('cp.success_message') }}");
+                },
+                error: function (xhr) {
+                    // إرجاع الحالة الأصلية
+                    $checkbox.prop('checked', originalState);
+
+                    let message = xhr.responseJSON?.message || "{{ __('cp.error_message') }}";
+                    showErrorMessage(message);
+                }
+            });
+        });
+
+    </script>
 @endsection

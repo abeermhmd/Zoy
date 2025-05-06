@@ -26,11 +26,14 @@ class CartService
         $this->settings = Setting::first();
     }
 
-
-    public function getCartItems()
+    /**
+     * Apply user-related conditions to cart queries.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function applyCartUserConditions($query)
     {
-        $query = Cart::query();
-
         if (Auth::guard('web')->check()) {
             $userId = Auth::id();
             $query->where('user_id', $userId);
@@ -47,9 +50,15 @@ class CartService
                 ->whereNull('user_id');
         }
 
-        return $query->get();
+        return $query;
     }
 
+    public function getCartItems()
+    {
+        $query = Cart::query();
+        $query = $this->applyCartUserConditions($query);
+        return $query->get();
+    }
 
     public function getCartData()
     {
@@ -63,7 +72,7 @@ class CartService
 
         return [
             'cart' => $cart,
-            'total_cart' => number_format($total_cart, 3)
+            'total_cart' => round($total_cart, 3)
         ];
     }
 
@@ -158,19 +167,7 @@ class CartService
             $query->where('product_color_size_id', $request->product_color_size_id);
         }
 
-        if (Auth::guard('web')->check()) {
-            $query->where('user_id', Auth::id());
-        } else {
-            $user_key = Session::get('cart.ids');
-            if (!$user_key) {
-                return response()->json([
-                    'status' => false,
-                    'code' => 400,
-                    'message' => __('website.no_cart_found')
-                ]);
-            }
-            $query->where('user_key', $user_key);
-        }
+        $query = $this->applyCartUserConditions($query);
 
         $cart = $query->first();
 
@@ -282,7 +279,8 @@ class CartService
             'total_cart' => $cartData['total_cart'],
             'delivery_charge' => $cartData['delivery_charge'],
             'final_total' => $cartData['final_total'],
-            'discount' => $cartData['discount']
+            'discount' => $cartData['discount'],
+            'country_id' => $cartData['country_id'] ?? null
         ]);
     }
 
@@ -293,11 +291,11 @@ class CartService
 
         if ($selectedCurrency) {
             $rates = [
-                'SAR' => $currency->SAR,
-                'BHD' => $currency->BHD,
-                'OMR' => $currency->OMR,
-                'QAR' => $currency->QAR,
-                'AED' => $currency->AED
+                'SAR' => (float) $currency->SAR,
+                'BHD' => (float) $currency->BHD,
+                'OMR' => (float) $currency->OMR,
+                'QAR' => (float) $currency->QAR,
+                'AED' => (float) $currency->AED
             ];
 
             return isset($rates[$selectedCurrency]) ? $amount * $rates[$selectedCurrency] : $amount;
@@ -315,15 +313,7 @@ class CartService
             $query->where('product_color_size_id', $request->product_color_size_id);
         }
 
-        if (Auth::guard('web')->check()) {
-            $query->where(function ($q) {
-                $q->where('user_id', Auth::id())
-                    ->orWhere('user_key', Session::get('cart.ids'));
-            });
-        } else {
-            $query->where('user_key', Session::get('cart.ids'))
-                ->whereNull('user_id');
-        }
+        $query = $this->applyCartUserConditions($query);
 
         return $query->first();
     }
@@ -363,14 +353,7 @@ class CartService
             ->where('id', $request->cart_id)
             ->where('product_id', $request->product_id);
 
-        if (Auth::guard('web')->check()) {
-            $query->where(function ($q) {
-                $q->where('user_id', Auth::id())
-                    ->orWhere('user_key', Session::get('cart.ids'));
-            });
-        } else {
-            $query->where('user_key', Session::get('cart.ids'));
-        }
+        $query = $this->applyCartUserConditions($query);
 
         return $query->first();
     }
@@ -398,7 +381,9 @@ class CartService
             ->first();
 
         if ($promo && $promo->all_countries != 1 && $countryId) {
-            $allowedCountryIds = PromoCodeCountry::pluck('country_id')->toArray();
+            $allowedCountryIds = PromoCodeCountry::where('promo_code_id', $promo->id)
+                ->pluck('country_id')
+                ->toArray();
             if (!in_array($countryId, $allowedCountryIds)) {
                 return null;
             }

@@ -180,7 +180,7 @@
         </div>
         <div class="col-md-6">
             <div class="fileinputForm">
-                <label>{{__('cp.image')}} <span style="display: inline-block; color: #2c3e50; background: linear-gradient(to right, #ecf0f1, #bdc3c7); padding: 3px 8px; border-radius: 4px; font-size: 0.9em; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);">(10:13 Ratio , 500px X 650px)</span></label>
+                <label>{{__('cp.image')}} <span style="display: inline-block; color: #2c3e50; background: linear-gradient(to right, #ecf0f1, #bdc3c7); padding: 3px 8px; border-radius: 4px; font-size: 0.9em; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);">(10:13 Ratio,  1000 px X 1300 px)</span></label>
 
                 <div class="fileinput-new thumbnail" onclick="document.getElementById('edit_image').click()" style="cursor:pointer">
                     <img src="{{ @$item->image }}" alt="Image" id="editImage">
@@ -207,7 +207,7 @@
             </div>
         </div>
         <div class="card-header">
-            <h3 class="card-title">{{__('cp.images')}}</h3>
+            <h3 class="card-title">{{__('cp.images')}} <span style="display: inline-block; color: #2c3e50; background: linear-gradient(to right, #ecf0f1, #bdc3c7); padding: 3px 8px; border-radius: 4px; font-size: 0.9em; box-shadow: 1px 1px 3px rgba(0,0,0,0.1);">{{ __('cp.max_images_message_pr') }}</span></h3>
             <br>
         </div>
         <div class="card-body">

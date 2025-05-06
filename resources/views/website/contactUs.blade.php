@@ -19,7 +19,7 @@
                 <div class="col-lg-6">
                     <div class="contact-ifo wow fadeInUp">
                         <h4>@lang('website.Reach out & touch us')</h4>
-                        <p>{{ @$setting->address }}</p>
+                        <a href="{{ @$setting->map_location_pinpoint }}" target="_blank"> <p>{{ @$setting->address }}</p></a>
                         <ul class="list-contact">
                             <li>
                                 <a href="mailto:{{ @$setting->info_email }}" target="_blank">

@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers\AdminCpanel;
 
+use App\Contracts\ProductContract;
+use App\DataTransferObjects\Products\ProductFilterDataTransfer;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductRequest;
 use App\Models\{Product, Setting, Category, Color, Size};
 use App\Services\ProductService;
-use Illuminate\Http\Request;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\ProductsExport;
 
 class ProductController extends Controller
 {
-    public function __construct(ProductService $productService)
-    {
-        $this->settings = Setting::query()->first();
-        $this->productService = $productService;
+    public function __construct(
+        protected ProductContract $productContract,
+    ){
         $this->middleware(function ($request, $next) {
             if (!can('products')) {
                 return redirect()->back()->with('permissions', __('cp.no_permission'));
@@ -26,7 +24,8 @@ class ProductController extends Controller
 
     public function index()
     {
-        $items = Product::query()->filter()->orderBy('id', 'desc')->paginate($this->settings->dashboard_paginate);
+        $dtoFilter = ProductFilterDataTransfer::fromRequest(request());
+        $items = $this->productContract->getProducts($dtoFilter);
         $categories = Category::active()
             ->where(function ($query) {
                 $query->whereNull('parent_id')->whereDoesntHave('subcategories')

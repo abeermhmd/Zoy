@@ -122,6 +122,7 @@
                                                     <span></span></label>
                                             </div>
                                         </th>
+                                        <th> {{ucwords(__('cp.submissionID'))}}</th>
                                         <th> {{ucwords(__('cp.name'))}}</th>
                                         <th> {{ucwords(__('cp.email'))}}</th>
                                         <th> {{ucwords(__('cp.mobile'))}}</th>
@@ -141,6 +142,7 @@
                                                         <span></span></label>
                                                 </div>
                                             </td>
+                                            <td> {{@$item->id}}</td>
                                             <td> {{@$item->name}}</td>
                                             <td> <a href="mailto:{{@$item->email}}"> {{@$item->email}}</a></td>
                                             <td> <a> {{@$item->mobile}}</a></td>

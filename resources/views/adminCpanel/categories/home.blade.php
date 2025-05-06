@@ -1,5 +1,6 @@
 @extends('layout.adminLayout')
-@section('title') {{ucwords(__('cp.main_categories'))}}
+@section('title')
+    {{ucwords(__('cp.main_categories'))}}
 @endsection
 @section('content')
     <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -16,11 +17,13 @@
                 <!--begin::Toolbar-->
                 <div>
                     <div class="btn-group mb-2 m-md-3 mt-md-0 ml-2 ">
-                        <button type="button" class="btn btn-secondary" href="#activation" role="button"  data-toggle="modal">
+                        <button type="button" class="btn btn-secondary" href="#activation" role="button"
+                                data-toggle="modal">
                             <i class="icon-xl la la-check"></i>
                             <span>{{__('cp.active')}}</span>
                         </button>
-                        <button type="button" class="btn btn-secondary" href="#cancel_activation" role="button"  data-toggle="modal">
+                        <button type="button" class="btn btn-secondary" href="#cancel_activation" role="button"
+                                data-toggle="modal">
                             <i class="icon-xl la la-ban"></i>
                             <span>{{__('cp.not_active')}}</span>
                         </button>
@@ -48,21 +51,25 @@
                 <div class="gutter-b example example-compact">
 
                     <div class="contentTabel">
-                        <button  type="button" class="btn btn-secondar btn--filter mr-2"><i class="icon-xl la la-sliders-h"></i>{{__('cp.filter')}}</button>
-                        <div class="container box-filter-collapse" >
-                            <div class="card" >
-                                <form class="form-horizontal" method="get" action="{{route('admins.categories.index')}}">
+                        <button type="button" class="btn btn-secondar btn--filter mr-2"><i
+                                class="icon-xl la la-sliders-h"></i>{{__('cp.filter')}}</button>
+                        <div class="container box-filter-collapse">
+                            <div class="card">
+                                <form class="form-horizontal" method="get"
+                                      action="{{route('admins.categories.index')}}">
                                     <div class="row">
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="control-label">{{__('cp.id')}}</label>
-                                                <input type="text" value="{{ request('id') }}" class="form-control" name="id" placeholder="{{__('cp.id')}}">
+                                                <input type="text" value="{{ request('id') }}" class="form-control"
+                                                       name="id" placeholder="{{__('cp.id')}}">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
                                                 <label class="control-label">{{__('cp.name')}}</label>
-                                                <input type="text" value="{{ request('name') }}" class="form-control" name="name" placeholder="{{__('cp.name')}}">
+                                                <input type="text" value="{{ request('name') }}" class="form-control"
+                                                       name="name" placeholder="{{__('cp.name')}}">
                                             </div>
                                         </div>
                                         <div class="col-md-4">
@@ -104,7 +111,8 @@
                                                     <option value="active" @selected(request('status') == 'active')>
                                                         {{__('cp.active')}}
                                                     </option>
-                                                    <option value="not_active" @selected(request('status') == 'not_active')>
+                                                    <option
+                                                        value="not_active" @selected(request('status') == 'not_active')>
                                                         {{__('cp.not_active')}}
                                                     </option>
                                                 </select>
@@ -112,11 +120,13 @@
                                         </div>
 
                                         <div class="col-md-4">
-                                            <button type="submit" class="btn sbold btn-default btnSearch">{{__('cp.search')}}
+                                            <button type="submit"
+                                                    class="btn sbold btn-default btnSearch">{{__('cp.search')}}
                                                 <i class="fa fa-search"></i>
                                             </button>
 
-                                            <a href="{{ route('admins.categories.index') }}" type="submit" class="btn sbold btn-default btnRest">{{__('cp.reset')}}
+                                            <a href="{{ route('admins.categories.index') }}" type="submit"
+                                               class="btn sbold btn-default btnRest">{{__('cp.reset')}}
                                                 <i class="fa fa-refresh"></i>
                                             </a>
                                         </div>
@@ -124,7 +134,8 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="card-header d-flex flex-column flex-sm-row align-items-sm-start justify-content-sm-between">
+                        <div
+                            class="card-header d-flex flex-column flex-sm-row align-items-sm-start justify-content-sm-between">
                             <div>
 
 
@@ -138,7 +149,7 @@
                                     <th class="wd-1p no-sort">
                                         <div class="checkbox-inline">
                                             <label class="checkbox">
-                                                <input type="checkbox" name="checkAll" /> <span></span></label>
+                                                <input type="checkbox" name="checkAll"/> <span></span></label>
                                         </div>
                                     </th>
                                     <th> {{ucwords(__('cp.id'))}}</th>
@@ -159,24 +170,37 @@
                                         <td class="v-align-middle wd-5p">
                                             <div class="checkbox-inline">
                                                 <label class="checkbox">
-                                                    <input type="checkbox" value="{{$one->id}}"  class="checkboxes" name="chkBox" />
+                                                    <input type="checkbox" value="{{$one->id}}" class="checkboxes"
+                                                           name="chkBox"/>
                                                     <span></span></label>
                                             </div>
                                         </td>
 
                                         <td class="v-align-middle wd-25p">{{@$one->id}}</td>
-                                        <td class="v-align-middle wd-5p"><img src="{{@$one->image}}" width="50px" height="50px"></td>
+                                        <td class="v-align-middle wd-5p"><img src="{{@$one->image}}" width="50px"
+                                                                              height="50px"></td>
 
                                         <td class="v-align-middle wd-25p">{{@$one->name}}</td>
                                         <td class="v-align-middle wd-25p">{{__('cp.'.$one->department)}}</td>
-                                        <td class="v-align-middle wd-25p">{{$one->is_featured == 'yes' ? __('cp.yes'):__(key: 'cp.No')}}</td>
-                                        <td class="v-align-middle wd-25p">{{$one->discount}}</td>
-                                        <td class="v-align-middle wd-25p">{{$one->products->count()}}</td>
-                                        <td class="v-align-middle wd-10p" > <span id="label-{{$one->id}}" class="badge badge-pill badge-{{($one->status == "active")
-                                            ? "info" : "danger"}}" id="label-{{$one->id}}">
+                                        <td class="v-align-middle wd-25p">
+                                            <span class="switch switch-sm switch-icon">
+                                                <label>
+                                                    <input type="checkbox" class="toggle-featured"
+                                                           data-id="{{ $one->id }}" {{ $one->is_featured == 'yes' ? 'checked' : '' }}/>
+                                                    <span></span>
+                                                </label>
+                                            </span>
+                                        </td>
 
-                                            {{__('cp.'.$one->status)}}
-                                        </span>
+                                        <td class="v-align-middle wd-25p">{{$one->discount}}</td>
+                                        <td class="v-align-middle wd-25p"><a title="{{__('cp.show')}}"
+                                                                             href="{{ route('admins.products.index', ['category_id' => $one->id]) }}">{{$one->products->count()}}</a>
+                                        </td>
+                                        <td class="v-align-middle wd-10p"> <span id="label-{{$one->id}}" class="badge badge-pill badge-{{($one->status == "active")
+                                                ? "info" : "danger"}}" id="label-{{$one->id}}">
+
+                                                {{__('cp.'.$one->status)}}
+                                            </span>
                                         </td>
 
                                         <td class="v-align-middle wd-10p">{{@$one->created_at->format('Y-m-d')}}</td>
@@ -187,11 +211,16 @@
                                                class="btn btn-sm btn-clean btn-icon" title="{{__('cp.edit')}}">
                                                 <i class="la la-edit"></i>
                                             </a>
+                                            <a href="{{ route('admins.products.index', ['category_id' => $one->id]) }}"
+                                               class="btn btn-sm btn-clean btn-icon" title="{{__('cp.products')}}">
+                                                <i class="la la-dropbox"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 @empty
-                                    <div style="text-align: center; color: #555; font-weight: bold; font-size: 18px; margin: 15px; padding: 20px; border: 2px dashed #ccc; border-radius: 10px; background-color: #f9f9f9;">
-                                       @lang('cp.no_data')
+                                    <div
+                                        style="text-align: center; color: #555; font-weight: bold; font-size: 18px; margin: 15px; padding: 20px; border: 2px dashed #ccc; border-radius: 10px; background-color: #f9f9f9;">
+                                        @lang('cp.no_data')
                                     </div>
                                 @endforelse
 
@@ -207,4 +236,38 @@
         </div>
         <!--end::Entry-->
     </div>
+@endsection
+@section('js')
+    <script>
+        $(document).on('focusin', '.toggle-featured', function () {
+            // نحفظ الحالة الأصلية قبل التغيير
+            $(this).data('previous-state', this.checked);
+        });
+
+        $(document).on('change', '.toggle-featured', function () {
+            let $checkbox = $(this);
+            let id = $checkbox.data('id');
+            let originalState = $checkbox.data('previous-state');
+
+            $.ajax({
+                url: '{{ route("admins.categories.toggleFeatured") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: id
+                },
+                success: function (response) {
+                    showSuccessMessage("{{ __('cp.success_message') }}");
+                },
+                error: function (xhr) {
+                    // إرجاع الحالة الأصلية
+                    $checkbox.prop('checked', originalState);
+
+                    let message = xhr.responseJSON?.message || "{{ __('cp.error_message') }}";
+                    showErrorMessage(message);
+                }
+            });
+        });
+
+    </script>
 @endsection

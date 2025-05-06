@@ -160,7 +160,7 @@
                                             <span>No media available</span>
                                             @endif
                                         </td>
-                                        <td >@if($item->type_link == 1) {{__('cp.nothing')}} @elseif($item->type_link == 2) {{__('cp.products')}} @elseif($item->type_link == 3) {{__('cp.main_category')}} @elseif($item->type_link == 4) {{__('cp.nothing')}} @endif</td>
+                                        <td >@if($item->type_link == 1) {{__('cp.nothing')}} @elseif($item->type_link == 2) {{__('cp.products')}} @elseif($item->type_link == 3) {{__('cp.main_category')}} @elseif($item->type_link == 4) {{__('cp.sub_category')}} @endif</td>
                                         <td class="v-align-middle wd-10p">
                                             <span id="label-{{$item->id}}"  class="badge badge-pill badge-{{($item->status == "active") ? "info" : "danger"}}"> {{__('cp.'.$item->status)}}</span>
                                         </td>

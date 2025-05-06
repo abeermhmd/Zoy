@@ -29,10 +29,16 @@
                             <span>{{__('cp.delete')}}</span>
                         </button>
                     </div>
-                    <a href="{{url(getLocal().'/admin/exportProducts?')}}@foreach(request()->query() as $key => $one){{$key}}={{$one}}&@endforeach"
-                        class="btn btn-secondary  mr-2 btn-success">
+                    <a href="{{ url(getLocal().'/admin/exportProducts?type=xlsx&') }}@foreach(request()->query() as $key => $one){{$key}}={{$one}}&@endforeach"
+                       class="btn btn-secondary mr-2 btn-success">
                         <i class="icon-xl la la-file-excel"></i> <span>{{__('cp.export')}}</span>
                     </a>
+
+                    <a href="{{ url(getLocal().'/admin/exportProducts?type=csv&') }}@foreach(request()->query() as $key => $one){{$key}}={{$one}}&@endforeach"
+                       class="btn btn-secondary mr-2 btn-success">
+                        <i class="icon-xl la la-file-excel"></i> <span>{{__('cp.exportCSV')}}</span>
+                    </a>
+
                     <a href="{{route('admins.products.create')}}" class="btn btn-secondary  mr-2 btn-success">
                         <i class="icon-xl la la-plus"></i>
                         <span>{{__('cp.add')}} </span>
@@ -177,6 +183,10 @@
                                             <a href="{{route('admins.products.edit' , @$one->id)}}"
                                                class="btn btn-sm btn-clean btn-icon" title="{{__('cp.edit')}}">
                                                 <i class="la la-edit"></i>
+                                            </a>
+                                            <a href="{{route('admins.products.show' , @$one->id)}}"
+                                               class="btn btn-sm btn-clean btn-icon" title="{{__('cp.show')}}">
+                                                <i class="la la-eye"></i>
                                             </a>
                                             @if (@$one->has_variants == 1)
                                                 <a href="{{route('admins.products.quantites' , @$one->id)}}" class="btn btn-sm btn-clean btn-icon"

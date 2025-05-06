@@ -159,7 +159,6 @@ return [
         'email' => 'البريد الالكتروني',
         'password' => 'كلمة المرور',
         'type' => 'النوع',
-
         'confirm_password' => 'تأكيد كلمة المرور',
         'description' => 'الوصف',
         'descriptions_en' => 'الوصف انجليزي',
@@ -176,6 +175,8 @@ return [
         'user_id' => 'رقم العضو',
         'name_ar' => 'الاسم عربي',
         'name_en' => 'الاسم انجليزي',
+        'new_password' => 'كلمة المرور الجديدة',
+        'old_password' => 'كلمة المرور الحالية',
         'description_ar' => 'الوصف بالعربي',
         'description_en' => 'الوصف انجليزي',
         'price' => 'السعر',

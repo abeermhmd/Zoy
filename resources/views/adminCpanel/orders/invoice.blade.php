@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{app()->getLocale()}}" dir="{{(app()->getLocale() == 'ar') ? 'rtl' : 'ltr'}}">
+<html lang="en" dir="ltr">
 
 <head>
     <meta charset="utf-8">
@@ -7,7 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>{{$setting->title}} | @lang('cp.invoice')</title>
     <link rel="icon" href="{{asset('website_assets/images/favicon.svg')}}">
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
 
@@ -87,7 +86,6 @@
         .to--pro {
             margin-bottom: 10px;
         }
-
         .to--pro:last-child {
             margin-bottom: 0;
         }
@@ -129,14 +127,12 @@
             font-size: 14px;
             margin-bottom: 15px;
         }
-
         .item-summary {
             position: relative;
             margin-bottom: 20px;
             display: flex;
             gap: 10px;
         }
-
         .item-summary figure {
             width: 25px;
             height: 25px;
@@ -149,11 +145,9 @@
             margin: 5px 0 0;
             font-size: 13px;
         }
-
         .txt-summ {
             width: calc(100% - 120px);
         }
-
         .txt-summ h6 {
             color: #452C44;
             font-size: 13px;
@@ -186,22 +180,38 @@
             <td style="text-align: center;padding:0 10px;">
                 <table width="100%">
                     <tr>
-                        <td style="border-radius: 15px;text-align: center;padding:50px 20px 0;">
-                            <a href=""><img src="{{asset('website_assets/images/logo.png')}}" alt="" title="Logo" width="100x"/></a>
+                        <td style="border-radius: 15px;text-align: center;padding:50px 20px 20px;">
+                            <a href=""><img src="{{asset('website_assets/images/logo.png')}}" alt="" title="Logo" width="100x" /></a>
                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
         <!--Logo-->
+    </table>
+
+    <table class="main-table" width="100%" style="background: #fff">
+        <tr>
+            <td style="padding:30px 10px;">
+                <table width="100%">
+                    <tbody><tr>
+                        <td style="">
+                            <h4 style="color:#452C44;font-size:26px;margin-bottom:5px;font-weight:600">@lang('cp.Your Order Invoice') - ZOY{{@$order->id}}</h4>
+                            <p style="color:#452C44;font-size:18px;display:block;font-weight:500;margin-bottom:10px">@lang('cp.Dear') {{@$order->user->name ?? @$order->name}}</p>
+                            <p style="color:#452C44;font-size:14px;display:block;">{{@$emailText->subject}}
+                                <br /> {!! @$emailText->content !!}</p>
+                        </td>
+                    </tr>
+                    </tbody></table>
+            </td>
+        </tr>
 
         <tr>
             <td style="padding:0 10px;">
                 <table width="100%">
-                    <tbody>
-                    <tr>
+                    <tbody><tr>
                         <td style="">
-                            <h6 style="color:#452C44;font-size:14px;margin-bottom:5px;">@lang('cp.Billed to')</h6>
+                            <h6 style="color:#452C44;font-size:14px;margin-bottom:5px;font-weight:600">@lang('cp.Billed to')</h6>
                             <p style="color:#452C44;font-size:12px;display:block;">{{@$order->user->name ?? @$order->name}}</p>
                             <p style="color:#452C44;font-size:12px;display:block;">{{@$order->user->email ?? @$order->email}}</p>
                             <p style="color:#452C44;font-size:12px;display:block;">{{@$order->user->mobile ?? @$order->mobile}}</p>
@@ -210,8 +220,7 @@
                                 , {{@$order->address->address_line_one ?? @$order->address_line_one}} {{ @$order->address->address_line_two ? ' , '.$order->address->address_line_two :  ' , '.$order->address_line_two}} {{@$order->address->extra_directions ? ' , '.$order->address->extra_directions : ' , '.$order->extra_directions}} {{@$order->address->postal_code ? ' , '.$order->address->postal_code : ' , '.$order->postal_code}}</p>
                         </td>
                     </tr>
-                    </tbody>
-                </table>
+                    </tbody></table>
             </td>
         </tr>
 
@@ -222,24 +231,24 @@
                         <td style="background:#fff;border:1px solid #E5E5E5;padding:25px;display:flex;justify-content:space-between;">
                             <div style="display: inline-block;">
                                 <p style="color:#452C44;font-size:12px;margin-bottom:5px">@lang('website.Order Id')</p>
-                                <strong
-                                    style="color: #452C44;display: block;font-size: 14px">ZOY{{@$order->id}}</strong>
+                                <strong style="color:#452C44;display:block;font-size:14px;font-weight:600">ZOY{{@$order->id}}</strong>
                             </div>
                             <div style="display: inline-block;">
                                 <p style="color:#452C44;font-size:12px;margin-bottom:5px">@lang('website.No_of_Products')</p>
-                                <strong
-                                    style="color: #452C44;display: block;font-size: 14px">{{@$order->count_products}}</strong>
+                                <strong style="color:#452C44;display:block;font-size:14px;font-weight:600">{{@$order->count_products}}</strong>
                             </div>
                             <div style="display: inline-block;">
                                 <p style="color:#452C44;font-size:12px;margin-bottom:5px">@lang('website.Order Date & time')</p>
-                                <strong
-                                    style="color: #452C44;display: block;font-size: 14px">{{@$order->created_at->format('d/m/y')}}
+                                <strong style="color:#452C44;display:block;font-size:14px;font-weight:600">{{@$order->created_at->format('d/m/y')}}
                                     | {{@$order->created_at->format('h:m A')}}</strong>
                             </div>
                             <div style="display: inline-block;">
                                 <p style="color:#452C44;font-size:12px;margin-bottom:5px">@lang('website.Amount')</p>
-                                <strong
-                                    style="color: #452C44;display: block;font-size: 14px">{{number_format(@$order->total ?? 0 ,3)}} @lang('website.KWD')</strong>
+                                <strong style="color:#452C44;display:block;font-size:14px;font-weight:600">{{number_format(@$order->total ?? 0 ,3)}} @lang('website.KWD')</strong>
+                            </div>
+                            <div style="display: inline-block;">
+                                <p style="color:#452C44;font-size:12px;margin-bottom:5px">@lang('website.status')</p>
+                                <strong style="color:#452C44;display:block;font-size:14px;font-weight:600">{{@$order->status_name}}</strong>
                             </div>
                         </td>
                     </tr>
@@ -249,12 +258,11 @@
         <!--ph invoice-->
 
         <tr>
-            <td style="padding-bottom: 50px;">
+            <td style="padding-bottom: 10px;">
                 <table width="100%">
                     <tr style="vertical-align: top;">
                         <td style="width: 60%;padding:0 10px">
-                            <table class="colom"
-                                   style="width:100%;background:#fff;border:1px solid #E5E5E5;padding:25px;height:250px;">
+                            <table class="colom" style="width:100%;background:#fff;border:1px solid #E5E5E5;padding:25px;height:330px;">
                                 <tr>
                                     <td>
                                         <div class="order-summry">
@@ -268,7 +276,7 @@
                                                             <span>@lang('website.Size') : {{@$oneProduct->size->name}}</span>
                                                         @endif
                                                         @if(@$oneProduct->color_id != '')
-                                                        <span>@lang('website.Color') : {{@$oneProduct->color->name}}</span>
+                                                            <span>@lang('website.Color') : {{@$oneProduct->color->name}}</span>
                                                         @endif
                                                     </div>
                                                     <div class="price-order">
@@ -282,8 +290,7 @@
                             </table>
                         </td>
                         <td style="width: 40%;padding: 0 10px">
-                            <table class="colom"
-                                   style="width:100%;background:#fff;border:1px solid #E5E5E5;padding:25px;height:250px;">
+                            <table class="colom" style="width:100%;background:#fff;border:1px solid #E5E5E5;padding:25px;height:330px;">
                                 <tr width="100%">
                                     <td width="100%">
                                         <div class="to--pro">
@@ -316,11 +323,26 @@
                             </table>
                         </td>
                     </tr>
+
                 </table>
             </td>
         </tr>
         <!--ph-->
 
+        <tr>
+            <td style="padding-bottom: 50px;">
+                <table width="100%">
+                    <tr>
+                        <td style="padding:0 10px">
+                            <p style="color:#452C44;font-size:15px;margin-bottom:5px">@lang('website.We will notify you once your order has shipped. Thank you for shopping with us!')</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+    <table class="main-table" width="100%" style="">
         <tr>
             <td style="text-align:center;padding-top:15px">
                 <table width="100%">
@@ -334,21 +356,14 @@
                             <p style="font-size: 14px;font-weight: 500;margin: 10px 0;color:#7E7E7E">@lang('website.Copyright')
                                 © {{date('Y')}} {{$setting->title}}
                                 - @lang('website.allRightsReserved')</p>
-                            </p>
                         </td>
                     </tr>
                 </table>
             </td>
         </tr>
         <!--footer-->
-
     </table>
 </center>
-<script>
-    window.onload = function() {
-        window.print();
-    };
-</script>
 </body>
 
 </html>

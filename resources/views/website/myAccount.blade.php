@@ -29,7 +29,7 @@
                     <input type="number" class="form-control" name="mobile" id="mobile" value="{{substr(auth('web')->user()->mobile , 3 )}}" required/>
                 </div>
                 <div class="form-group form-calender">
-                    <input type="text" id="dateInput" class="form-control" name="date_of_birth" value="{{auth('web')->user()->date_of_birth}}" required />
+                    <input type="text" id="dateInput" class="form-control" name="date_of_birth" value="{{auth('web')->user()->date_of_birth}}" required readonly/>
                     <i class="icon-calender"></i>
                 </div>
             </div>

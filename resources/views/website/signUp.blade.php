@@ -47,7 +47,7 @@
                     </div>
                     <div class="form-group form-calender">
                         <input type="text" id="dateInput" name="date_of_birth" value="{{ old('date_of_birth') }}"
-                               class="form-control" placeholder="@lang('website.Date of birth') *" required />
+                               class="form-control" placeholder="@lang('website.Date of birth') *" required readonly />
                         <i class="icon-calender"></i>
                     </div>
                     <div class="form-group">
@@ -173,7 +173,7 @@
                                 Swal.fire({
                                     icon: 'error',
                                     title: '{{ __("website.Error") }}',
-                                    text: response.message || '{{ __("website.Error occurred. Please try again.") }}',
+                                    text: response.message || '{{ __("website.Error occurred. Please try again2.") }}',
                                     confirmButtonText: '{{ __("website.OK") }}'
                                 });
                             }

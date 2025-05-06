@@ -105,6 +105,7 @@
                                     <th>{{ ucwords(__('cp.subject')) }}</th>
                                     <th>{{ ucwords(__('cp.status')) }}</th>
                                     <th>{{ ucwords(__('cp.date_time_for_send'))}}</th>
+                                    <th>{{ ucwords(__('cp.total_recipients'))}}</th>
                                     <th>{{ ucwords(__('cp.created')) }}</th>
                                     <th>{{ ucwords(__('cp.action')) }}</th>
                                 </tr>
@@ -134,6 +135,7 @@
                                         --
                                         @endif
                                     </td>
+                                    <td class="v-align-middle wd-10p">{{ @$one->total_recipients }}</td>
                                     <td class="v-align-middle wd-10p">{{ @$one->created_at->format('Y-m-d') }}</td>
                                     <td class="v-align-middle wd-15p">
                                         @if (@$one->status == 'draft')

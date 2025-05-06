@@ -144,7 +144,6 @@
                     <i class="icon-search"></i>
                 </div>
             </div>
-
             <div class="logo_site">
                 <a href="{{route('home') }}">
                     <img src="{{ asset('website_assets/images/logo.svg') }}" alt=""/>
@@ -206,7 +205,7 @@
                     <div class="col-lg-3">
                         <div class="menu-ft wow fadeInUp">
                             <h5>@lang('website.Contact')</h5>
-                            <p>{{ @$setting->address }}</p>
+                            <a href="{{ @$setting->map_location_pinpoint }}" target="_blank"> <p>{{ @$setting->address }}</p></a>
                             <ul class="list-contact">
                                 <li>
                                     <a href="mailto:{{ @$setting->info_email }}" target="_blank">

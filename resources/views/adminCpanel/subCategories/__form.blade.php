@@ -59,7 +59,7 @@
                 <div class="btn btn-change-img red" onclick="document.getElementById('edit_image').click()">
                     <i class="fas fa-pencil-alt"></i>
                 </div>
-                <input type="file" class="form-control" name="image" id="edit_image" style="display:none" accept="image/*" >
+                <input type="file" class="form-control" name="image" id="edit_image" style="display:none" accept="image/*" @if(request()->routeIs('admins.subCategories.create')) required @endif>
             </div>
         </div>
     </div>

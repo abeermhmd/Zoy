@@ -47,7 +47,8 @@
         .aside-menu .menu-nav .menu-item.menu-item-here .menu-link {
             background: linear-gradient(90deg, #452C44, #6B4E71);
             color: white;
-            box-shadow: 0 4px 12授予: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12
+            授予: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .aside-menu .menu-submenu {
@@ -225,46 +226,78 @@
             min-width: 100px;
         }
 
-        /* تسريع مؤشر التحميل */
-        .page-loading::before {
-            content: '';
+        /*!* تسريع مؤشر التحميل *!*/
+        /*.page-loading::before {*/
+        /*    content: '';*/
+        /*    position: fixed;*/
+        /*    top: 0;*/
+        /*    left: 0;*/
+        /*    width: 100%;*/
+        /*    height: 100%;*/
+        /*    background: rgba(255, 255, 255, 0.8);*/
+        /*    z-index: 9999;*/
+        /*    animation: fadeIn 0.2s ease, fadeOut 0.2s ease 0.3s forwards;*/
+        /*}*/
+
+        /*.page-loading::after {*/
+        /*    content: '';*/
+        /*    position: fixed;*/
+        /*    top: 50%;*/
+        /*    left: 50%;*/
+        /*    width: 40px;*/
+        /*    height: 40px;*/
+        /*    border: 4px solid #452C44;*/
+        /*    border-top: 4px solid transparent;*/
+        /*    border-radius: 50%;*/
+        /*    animation: spin 0.5s linear infinite;*/
+        /*    transform: translate(-50%, -50%);*/
+        /*}*/
+        .splash-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.8);
             z-index: 9999;
-            animation: fadeIn 0.2s ease, fadeOut 0.2s ease 0.3s forwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            background-color: transparent;
         }
 
-        .page-loading::after {
-            content: '';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 40px;
-            height: 40px;
-            border: 4px solid #452C44;
-            border-top: 4px solid transparent;
-            border-radius: 50%;
-            animation: spin 0.5s linear infinite;
-            transform: translate(-50%, -50%);
+        .splash-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes fadeOut {
-            from { opacity: 1; }
-            to { opacity: 0; }
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
         }
 
         /* دعم RTL */
@@ -433,12 +466,14 @@
                                             <?php
                                             $lang = LaravelLocalization::getSupportedLocales()['ar']
                                             ?>
-                                        <img class="h-20px w-20px rounded-sm" src="{{url('admin_assets/media/svg/flags/107-kwait.svg')}}" alt="">
+                                        <img class="h-20px w-20px rounded-sm"
+                                             src="{{url('admin_assets/media/svg/flags/107-kwait.svg')}}" alt="">
                                     @else
                                             <?php
                                             $lang = LaravelLocalization::getSupportedLocales()['en']
                                             ?>
-                                        <img class="h-20px w-20px rounded-sm" src="{{url('admin_assets/media/svg/flags/012-uk.svg')}}" alt="">
+                                        <img class="h-20px w-20px rounded-sm"
+                                             src="{{url('admin_assets/media/svg/flags/012-uk.svg')}}" alt="">
                                     @endif
                                 </div>
                             </div>
@@ -504,14 +539,18 @@
 
             @if (session('permissions'))
                 <div class="container pt30">
-                    <div class="alert alert-custom alert-white alert-shadow gutter-b d-flex align-items-center" role="alert">
+                    <div class="alert alert-custom alert-white alert-shadow gutter-b d-flex align-items-center"
+                         role="alert">
                         <div class="alert-icon me-3">
                 <span class="svg-icon svg-icon-danger svg-icon-xl">
                     <!--begin::Svg Icon | path:assets/media/svg/icons/Code/Warning-2.svg-->
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
+                         version="1.1">
                         <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                             <rect x="0" y="0" width="24" height="24"/>
-                            <path d="M12,3 L2,21 L22,21 L12,3 Z M11,15 L13,15 L13,17 L11,17 L11,15 Z M11,7 L13,7 L13,13 L11,13 L11,7 Z" fill="#000000"/>
+                            <path
+                                d="M12,3 L2,21 L22,21 L12,3 Z M11,15 L13,15 L13,17 L11,17 L11,15 Z M11,7 L13,7 L13,13 L11,13 L11,7 Z"
+                                fill="#000000"/>
                         </g>
                     </svg>
                     <!--end::Svg Icon-->
@@ -531,18 +570,25 @@
 
             @if (session('status'))
                 <div class="container pt30">
-                    <div class="alert alert-custom alert-white alert-shadow gutter-b" style="border-color:#00cc00" role="alert">
+                    <div class="alert alert-custom alert-white alert-shadow gutter-b" style="border-color:#00cc00"
+                         role="alert">
                         <div class="d-flex align-items-center" style="color: #00cc00; gap: 15px;">
                             <!--begin::Svg Icon-->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 60 60" style="flex-shrink: 0;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 60 60"
+                                 style="flex-shrink: 0;">
                                 <g>
-                                    <path fill="#00cc00" d="M59 30c0 16.632-13.99 29.987-30.848 28.943-14.444-.895-26.2-12.651-27.094-27.095C.013 14.99 13.368 1 30 1a28.85 28.85 0 0 1 12.74 2.941c1.031.506 1.409 1.79.84 2.788l-.004.007a1.998 1.998 0 0 1-2.626.796c-3.818-1.88-8.183-2.795-12.79-2.466-12.1.863-21.982 10.568-23.059 22.651-1.34 15.039 10.712 27.662 25.563 27.274 12.718-.332 23.334-10.418 24.265-23.106a24.863 24.863 0 0 0-1.099-9.429a1.985 1.985 0 0 1 1.012-2.378c1.094-.547 2.435 0 2.806 1.165A28.849 28.849 0 0 1 58.999 30z" opacity="1"></path>
-                                    <path fill="#00cc00" d="m15.41 22.472 15.814 21.397a2.763 2.763 0 0 0 4.631-.266L58.707 4.045c1.19-2.06-1.525-4.131-3.144-2.397L31.755 27.15l-13.814-7.646c-1.867-1.033-3.807 1.241-2.531 2.968z" opacity="1"></path>
+                                    <path fill="#00cc00"
+                                          d="M59 30c0 16.632-13.99 29.987-30.848 28.943-14.444-.895-26.2-12.651-27.094-27.095C.013 14.99 13.368 1 30 1a28.85 28.85 0 0 1 12.74 2.941c1.031.506 1.409 1.79.84 2.788l-.004.007a1.998 1.998 0 0 1-2.626.796c-3.818-1.88-8.183-2.795-12.79-2.466-12.1.863-21.982 10.568-23.059 22.651-1.34 15.039 10.712 27.662 25.563 27.274 12.718-.332 23.334-10.418 24.265-23.106a24.863 24.863 0 0 0-1.099-9.429a1.985 1.985 0 0 1 1.012-2.378c1.094-.547 2.435 0 2.806 1.165A28.849 28.849 0 0 1 58.999 30z"
+                                          opacity="1"></path>
+                                    <path fill="#00cc00"
+                                          d="m15.41 22.472 15.814 21.397a2.763 2.763 0 0 0 4.631-.266L58.707 4.045c1.19-2.06-1.525-4.131-3.144-2.397L31.755 27.15l-13.814-7.646c-1.867-1.033-3.807 1.241-2.531 2.968z"
+                                          opacity="1"></path>
                                 </g>
                             </svg>
                             <!--end::Svg Icon-->
 
-                            <div class="alert-text" style="color:#00cc00; display: flex; align-items: center; padding-left: 30px; !important;">
+                            <div class="alert-text"
+                                 style="color:#00cc00; display: flex; align-items: center; padding-left: 30px; !important;">
                                 {{ session('status') }}
                             </div>
                         </div>
@@ -550,7 +596,7 @@
                 </div>
             @endif
 
-        @if (session('error'))
+            @if (session('error'))
                 <ul style="border: 1px solid #ff0000; background-color: white">
                     <li style="color: #ff0000; margin: 15px">{{  session('error')  }}</li>
                 </ul>
@@ -683,6 +729,13 @@
     <!--end::Content-->
 </div>
 <!-- end::User Panel-->
+<!-- Loader -->
+<div id="kt_app_splash-screen" class="splash-screen">
+    <div class="splash-content">
+        <img src="{{ asset($setting->logo) }}" alt="Logo" class="h-100px mb-5" />
+        <div class="spinner-border" style="color: #452C44;" role="status"></div>
+    </div>
+</div>
 
 <div class="modal modal-sticky modal-sticky-bottom-right" id="kt_chat_modal" role="dialog" data-backdrop="false">
     <div class="modal-dialog" role="document">
@@ -1167,7 +1220,20 @@
 <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js"></script>
-
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyC6iPSWI0hqcFnja2HIRbD_AE_0I-MJkys",
+        authDomain: "carbide-ground-455217-s6.firebaseapp.com",
+        databaseURL: "https://carbide-ground-455217-s6-default-rtdb.firebaseio.com/",
+        projectId: "carbide-ground-455217-s6",
+        storageBucket: "carbide-ground-455217-s6.firebasestorage.app",
+        messagingSenderId: "333743816543",
+        appId: "1:333743816543:web:9180a866bcd463ebc5c0ea",
+        measurementId: "G-7JZCK027S0"
+    };
+    //   // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+</script>
 <script type="text/javascript">
     var statistics = firebase.database().ref("orders/count_orders");
 
@@ -1512,13 +1578,7 @@
         e.preventDefault();
         var action = $(this).data('action');
         var url = "{{ url('/admin/changeStatus/'.Request::segment(3)) }}";
-        @if(Request::segment(3) == 'vendors')
-        @if(Request::segment(4) && Request::segment(4) == 'branches')
-        var url = "{{ url('/admin/changeStatus/branches') }}";
-        @else
-        var url = "{{ url('/admin/changeStatus/'.Request::segment(3)) }}";
-        @endif
-        @endif
+
         var csrf_token = '{{csrf_token()}}';
         var IDsArray = [];
         $("input:checkbox[name=chkBox]:checked").each(function () {
@@ -1532,62 +1592,142 @@
                 url: url,
                 data: {action: action, IDsArray: IDsArray, _token: csrf_token},
                 success: function (response) {
-                    if (response === 'active') {
-                        //alert('fsvf');
+                    let message = '';
+
+                    if (response.action === 'active') {
                         $.each(IDsArray, function (index, value) {
                             $('#label-' + value).removeClass('badge-danger');
                             $('#label-' + value).addClass('badge-info');
-                            $r = '{{app()->getLocale()}}';
+                            var $r = '{{app()->getLocale()}}';
                             if ($r == 'ar') {
-                                $('#label-' + value).text('فعال ');
+                                $('#label-' + value).text('فعال');
                             } else {
                                 $('#label-' + value).text('Active');
-
                             }
                         });
                         $('#activation').modal('hide');
                         $('#activation_vendor').modal('hide');
-                    } else if (response === 'not_active') {
-                        //alert('fg');
+                        message = response.message;
+                    } else if (response.action === 'not_active') {
                         $.each(IDsArray, function (index, value) {
                             $('#label-' + value).removeClass('badge-info');
                             $('#label-' + value).addClass('badge-danger');
-                            $r = '{{app()->getLocale()}}';
+                            var $r = '{{app()->getLocale()}}';
                             if ($r == 'ar') {
                                 $('#label-' + value).text('غير فعال');
                             } else {
                                 $('#label-' + value).text('Not Active');
-
                             }
                         });
                         $('#cancel_activation').modal('hide');
-                    } else if (response === 'delete') {
+                    } else if (response === 'delete' || response.action === 'delete') {
                         $.each(IDsArray, function (index, value) {
-                            $('#tr-' + value).hide(2000);
-                        });
-                        $('#deleteAll').modal('hide');
-                        var rowCount = $('#kt_datatable').DataTable().rows().count();
-                        if (rowCount === 0) {
-                            location.reload();
-                        }
-                    }
+                            $('#tr-' + value).fadeOut(2000, function () {
+                                $(this).remove();
 
+                                if (index === IDsArray.length - 1) {
+                                    var rowCount = $('#tableWithSearch tbody tr:visible').length;
+
+                                    if (rowCount === 0) {
+                                        location.reload();
+                                    }
+                                }
+                            });
+                        });
+
+                        $('#deleteAll').modal('hide');
+                    }
                     IDArray = [];
                     $("input:checkbox[name=chkBox]:checked").each(function () {
                         $(this).prop('checked', false);
                     });
                     $("input:checkbox[name=checkAll]:checked").prop('checked', false);
                     $('.event').attr('disabled', 'disabled');
-
+                    showSuccessMessage(response.message);
                 },
                 fail: function (e) {
                     alert(e);
                 }
+
             });
+
         } else {
             alert('{{__('cp.not_selected')}}');
         }
     });
+
+    function showSuccessMessage(message) {
+        if ('{{ app()->getLocale() }}' === 'ar') {
+            message = @json(__('cp.success_message'));
+        }
+        var alertDiv = $(`
+            <div class="container pt30">
+                <div class="alert alert-custom alert-white alert-shadow gutter-b" style="border-color:#00cc00" role="alert">
+                    <div class="d-flex align-items-center" style="color: #00cc00; gap: 15px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 60 60" style="flex-shrink: 0;">
+                            <g>
+                                <path fill="#00cc00" d="M59 30c0 16.632-13.99 29.987-30.848 28.943-14.444-.895-26.2-12.651-27.094-27.095C.013 14.99 13.368 1 30 1a28.85 28.85 0 0 1 12.74 2.941c1.031.506 1.409 1.79.84 2.788l-.004.007a1.998 1.998 0 0 1-2.626.796c-3.818-1.88-8.183-2.795-12.79-2.466-12.1.863-21.982 10.568-23.059 22.651-1.34 15.039 10.712 27.662 25.563 27.274 12.718-.332 23.334-10.418 24.265-23.106a24.863 24.863 0 0 0-1.099-9.429a1.985 1.985 0 0 1 1.012-2.378c1.094-.547 2.435 0 2.806 1.165A28.849 28.849 0 0 1 58.999 30z" opacity="1"></path>
+                                <path fill="#00cc00" d="m15.41 22.472 15.814 21.397a2.763 2.763 0 0 0 4.631-.266L58.707 4.045c1.19-2.06-1.525-4.131-3.144-2.397L31.755 27.15l-13.814-7.646c-1.867-1.033-3.807 1.241-2.531 2.968z" opacity="1"></path>
+                            </g>
+                        </svg>
+                        <div class="alert-text" style="color:#00cc00; display: flex; align-items: center; padding-left: 30px;">
+                             ` + message + `
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `);
+
+        $('.container.pt30 .alert.alert-custom').remove();
+
+        $('#kt_header').after(alertDiv);
+
+        alertDiv.hide().fadeIn(500);
+
+        setTimeout(function () {
+            alertDiv.fadeOut(700, function () {
+                alertDiv.remove();
+            });
+        }, 3000);
+    }
+
+    function showErrorMessage(message) {
+        var alertDiv = $(`
+            <div class="container pt30">
+                <div class="alert alert-custom alert-white alert-shadow gutter-b d-flex align-items-center"
+                     role="alert">
+                    <div class="alert-icon me-3">
+                        <span class="svg-icon svg-icon-danger svg-icon-xl">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24"
+                                 version="1.1">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect x="0" y="0" width="24" height="24"/>
+                                    <path
+                                        d="M12,3 L2,21 L22,21 L12,3 Z M11,15 L13,15 L13,17 L11,17 L11,15 Z M11,7 L13,7 L13,13 L11,13 L11,7 Z"
+                                        fill="#000000"/>
+                                </g>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="alert-text" style="color: #dc3545; font-weight: bold; font-size: 1.1rem;">
+                        ${message}
+                    </div>
+                </div>
+            </div>
+        `);
+
+        $('.container.pt30 .alert.alert-custom').remove();
+
+        $('#kt_header').after(alertDiv);
+
+        alertDiv.hide().fadeIn(500);
+
+        setTimeout(function () {
+            alertDiv.fadeOut(700, function () {
+                alertDiv.remove();
+            });
+        }, 3000);
+    }
 
 </script>
 <script>
@@ -1650,6 +1790,16 @@
 
     $('#all_images').on('change', function (e) {
         readURLMultiple(this, $('.imageupload'));
+    });
+</script>
+<script>
+    window.addEventListener('load', function () {
+        const splash = document.getElementById('kt_app_splash-screen');
+        if (splash) {
+            splash.style.transition = 'opacity 0.5s ease';
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 500);
+        }
     });
 </script>
 </body>

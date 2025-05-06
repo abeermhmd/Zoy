@@ -2,14 +2,25 @@
 
 namespace App\Services;
 
+use App\Contracts\ProductContract;
+use App\DataTransferObjects\Products\ProductFilterDataTransfer;
 use App\Models\{Product, ProductColor, ProductColorImage, ProductColorSize, ProductImage, ProductSimilar, ProductSize};
 use App\Traits\ImageTrait;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
-class ProductService
+class ProductService implements ProductContract
 {
     use ImageTrait;
+
+    public function getProducts(?ProductFilterDataTransfer $filters = null)
+    {
+        // TODO: Implement getProducts() method.
+    }
+    public function getProduct(string $id)
+    {
+        // TODO: Implement getProduct() method.
+    }
 
     public function createProduct($data): Product
     {

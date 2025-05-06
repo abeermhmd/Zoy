@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers\AdminCpanel;
 
+use App\Contracts\SizeContract;
+use App\DataTransferObjects\Sizes\{SizeDataTransfer,SizeFilterDataTransfer};
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SizeRequest;
-use App\Models\{Size, Setting};
-use App\Services\SizeService;
 
 class SizeController extends Controller
 {
-    public function __construct(SizeService $sizeService)
+    public function __construct(protected SizeContract $sizeContract)
     {
-        $this->settings = Setting::query()->first();
-        $this->sizeService = $sizeService;
         $this->middleware(function ($request, $next) {
             if (!can('variants')) { return redirect()->back()->with('permissions', __('cp.no_permission'));}
             return $next($request);
@@ -21,32 +19,34 @@ class SizeController extends Controller
 
     public function index()
     {
-        $items = Size::query()->filter()->orderBy('id', 'desc')->paginate($this->settings->dashboard_paginate);
+        $dtoFilter = SizeFilterDataTransfer::fromRequest(request());
+        $items = $this->sizeContract->getSizes($dtoFilter);
         return view('adminCpanel.sizes.home',compact('items'));
     }
 
     public function create()
     {
-         $item = new Size();
-        return view('adminCpanel.sizes.create' ,compact('item'));
+        return view('adminCpanel.sizes.create');
     }
 
     public function store(SizeRequest $request)
     {
-        $this->sizeService->createSize($request);
+        $dtoSize = SizeDataTransfer::fromRequest($request);
+        $this->sizeContract->createSize($dtoSize);
         return redirect()->back()->with('status', __('cp.create'));
     }
 
     public function edit($id)
     {
-        $item = Size::query()->findOrFail($id);
+        $item = $this->sizeContract->getSize($id);
         return view('adminCpanel.sizes.edit', compact('item'));
     }
 
     public function update(SizeRequest $request, $id)
     {
-        $item = Size::findOrFail($id);
-        $this->sizeService->updateSize($item , $request);
+        $item = $this->sizeContract->getSize($id);
+        $dtoSize = SizeDataTransfer::fromRequest($request);
+        $this->sizeContract->updateSize($item , $dtoSize);
         return redirect()->back()->with('status', __('cp.update'));
     }
 }

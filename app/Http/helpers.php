@@ -2,7 +2,6 @@
 
 use App\Models\Language;
 use Illuminate\Support\Facades\Cache;
-use App\Models\Setting;
 
 function storeTranslatedFields($model, $fieldNames, $data)
 {
@@ -16,12 +15,13 @@ function storeTranslatedFields($model, $fieldNames, $data)
     collect($fieldNames)->map(function ($fieldName) use ($model, $locales, $data) {
         $locales->map(function ($locale) use ($fieldName, $model, $data) {
             $translatedField = $fieldName . '_' . $locale;
-            if (property_exists($data, $translatedField)) {
-                $model->translateOrNew($locale)->{$fieldName} = $data->{$translatedField};
+            if ($translatedField) {
+                $model->translateOrNew($locale)->{$fieldName} = $data->$translatedField;
             }
         });
     });
 }
+
 if (!function_exists('get_setting')) {
     function get_setting(string $key = null, $default = null)
     {
@@ -39,6 +39,7 @@ if (!function_exists('get_setting')) {
         return $settings;
     }
 }
+
 function can($permission)
 {
     $userCheck = auth()->guard('admin')->check();
@@ -69,12 +70,10 @@ function admin_assets($dir)
     return url('/admin_assets/assets/' . $dir);
 }
 
-
 function getLocal()
 {
     return app()->getLocale();
 }
-
 function convertAr2En($string)
 {
     $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
@@ -86,7 +85,6 @@ function convertAr2En($string)
 
     return $englishNumbersOnly;
 }
-
 function sendSMS($mobile, $message)
 {
     return true;
@@ -110,12 +108,10 @@ function sendSMS($mobile, $message)
         return false;
     }
 }
-
 function random_number($digits)
 {
     return str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
 }
-
 function updateFirebase($type = 'increment', $target = 'count_orders', $value = 1)
 {
     $database = app('firebase.database');
@@ -148,7 +144,6 @@ function updateFirebase($type = 'increment', $target = 'count_orders', $value = 
         }
     }
 }
-
 
 function slugURL($title)
 {

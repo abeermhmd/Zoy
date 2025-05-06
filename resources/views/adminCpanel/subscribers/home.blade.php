@@ -110,7 +110,7 @@
                                     <th> {{ucwords(__('cp.Subscription_date'))}}</th>
                                     <th> {{ucwords(__('cp.email'))}}</th>
                                     <th> {{ucwords(__('cp.status'))}}</th>
-                                    {{--  <th> {{ucwords(__('cp.action'))}}</th>  --}}
+                                      <th> {{ucwords(__('cp.action'))}}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -133,13 +133,12 @@
                                         </td>
 
 
-                                        {{--  <td class="v-align-middle wd-15p optionAddHours">
-
+                                          <td class="v-align-middle wd-15p optionAddHours">
                                             <a href="{{route('admins.subscribers.edit' , @$one->id)}}"
                                                class="btn btn-sm btn-clean btn-icon" title="{{__('cp.edit')}}">
                                                 <i class="la la-edit"></i>
                                             </a>
-                                        </td>  --}}
+                                        </td>
                                     </tr>
                                 @empty
                                     <div style="text-align: center; color: #555; font-weight: bold; font-size: 18px; margin: 15px; padding: 20px; border: 2px dashed #ccc; border-radius: 10px; background-color: #f9f9f9;">

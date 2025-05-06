@@ -210,12 +210,7 @@
                                 window.location.href = response.redirect;
                             } else {
                                 $('#loginForm')[0].reset();
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: '{{ __("website.Success") }}',
-                                    text: '{{ __("website.login_successful") }}',
-                                    confirmButtonText: '@lang("website.OK")'
-                                });
+                                window.location.href = '{{ route('checkOutPage') }}';
                             }
                         },
                         error: function (xhr) {

@@ -42,7 +42,41 @@
                 <div class="gutter-b example example-compact">
 
                     <div class="contentTabel">
+                        <button  type="button" class="btn btn-secondar btn--filter mr-2"><i class="icon-xl la la-sliders-h"></i>{{__('cp.filter')}}</button>
+                        <div class="container box-filter-collapse" >
+                            <div class="card" >
+                                <form class="form-horizontal" method="get" action="{{route('admins.emailTexts.index')}}">
+                                    <div class="row">
 
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label">{{__('cp.status')}}</label>
+                                                <select id="multiple2" class="form-control"
+                                                        name="status">
+                                                    <option value="">{{__('cp.all')}}</option>
+                                                    <option value="active" @selected(request('status') == 'active')>
+                                                        {{__('cp.active')}}
+                                                    </option>
+                                                    <option value="not_active" @selected(request('status') == 'not_active')>
+                                                        {{__('cp.not_active')}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-4">
+                                            <button type="submit" class="btn sbold btn-default btnSearch">{{__('cp.search')}}
+                                                <i class="fa fa-search"></i>
+                                            </button>
+
+                                            <a href="{{ route('admins.emailTexts.index') }}" type="submit" class="btn sbold btn-default btnRest">{{__('cp.reset')}}
+                                                <i class="fa fa-refresh"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
                         <div class="card-header d-flex flex-column flex-sm-row align-items-sm-start justify-content-sm-between">
                             <div>
 
@@ -85,11 +119,11 @@
                                         </span>
                                         </td>
 
-                                        <td class="v-align-middle wd-10p">{{@@$one->updated_at->format('Y-m-d')}}</td>
+                                        <td class="v-align-middle wd-10p">{{@$one->updated_at->format('Y-m-d')}}</td>
 
                                         <td class="v-align-middle wd-15p optionAddHours">
 
-                                            <a href="{{route('admins.emailTexts.edit' , @@$one->id)}}"
+                                            <a href="{{route('admins.emailTexts.edit' , @$one->id)}}"
                                                class="btn btn-sm btn-clean btn-icon" title="{{__('cp.edit')}}">
                                                 <i class="la la-edit"></i>
                                             </a>

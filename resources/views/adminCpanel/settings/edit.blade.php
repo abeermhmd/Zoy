@@ -43,7 +43,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label
-                                                for="title_{{$locale->lang}}">{{__('cp.title_'.$locale->lang)}}</label>
+                                                for="title_{{$locale->lang}}">{{__('cp.title_web_'.$locale->lang)}}</label>
                                             <input type="text" class="form-control"
                                                    {{($locale->lang == 'ar') ? 'dir=rtl' :'' }}
                                                    name="title_{{$locale->lang}}"
@@ -153,35 +153,63 @@
                             <h3 class="card-title">{{__('cp.address')}}</h3>
                         </div>
                         <div class="card-body">
-                            <div class="row col-sm-12">
+                            <div class="row">
+                            @foreach($locales as $locale)
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>{{__('cp.area')}}</label>
-                                        <input type="text" class="form-control" name="area"
-                                               value="{{@$item->area}}" required/>
+                                        <label
+                                            for="address_{{$locale->lang}}">{{__('cp.address_'.$locale->lang)}}</label>
+                                        <input type="text" class="form-control"
+                                               {{($locale->lang == 'ar') ? 'dir=rtl' :'' }}
+                                               name="address_{{$locale->lang}}"
+                                               id="address_{{$locale->lang}}"
+                                               value="{{ old('address', @$item->translate($locale->lang)->address) }}"
+                                               required/>
                                     </div>
                                 </div>
+                            @endforeach
+                                @foreach($locales as $locale)
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>{{__('cp.block')}}</label>
-                                        <input type="text" class="form-control" name="block"
-                                               value="{{@$item->block}}" required/>
+                                        <label
+                                            for="area_{{$locale->lang}}">{{__('cp.area_'.$locale->lang)}}</label>
+                                        <input type="text" class="form-control"
+                                               {{($locale->lang == 'ar') ? 'dir=rtl' :'' }}
+                                               name="area_{{$locale->lang}}"
+                                               id="area_{{$locale->lang}}"
+                                               value="{{ old('area', @$item->translate($locale->lang)->area) }}"
+                                               required/>
                                     </div>
                                 </div>
+                            @endforeach
+                                @foreach($locales as $locale)
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>{{__('cp.street')}}</label>
-                                        <input type="text" class="form-control" name="street"
-                                               value="{{@$item->street}}" required/>
+                                        <label
+                                            for="block_{{$locale->lang}}">{{__('cp.block_'.$locale->lang)}}</label>
+                                        <input type="text" class="form-control"
+                                               {{($locale->lang == 'ar') ? 'dir=rtl' :'' }}
+                                               name="block_{{$locale->lang}}"
+                                               id="block_{{$locale->lang}}"
+                                               value="{{ old('block', @$item->translate($locale->lang)->block) }}"
+                                               required/>
                                     </div>
                                 </div>
+                            @endforeach
+                                @foreach($locales as $locale)
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>{{__('cp.address')}}</label>
-                                        <input type="text" class="form-control" name="address"
-                                               value="{{@$item->address}}" required/>
+                                        <label
+                                            for="street_{{$locale->lang}}">{{__('cp.street_'.$locale->lang)}}</label>
+                                        <input type="text" class="form-control"
+                                               {{($locale->lang == 'ar') ? 'dir=rtl' :'' }}
+                                               name="street_{{$locale->lang}}"
+                                               id="street_{{$locale->lang}}"
+                                               value="{{ old('street', @$item->translate($locale->lang)->street) }}"
+                                               required/>
                                     </div>
                                 </div>
+                            @endforeach
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>{{__('cp.map_location_pinpoint')}}</label>
@@ -189,8 +217,8 @@
                                                value="{{@$item->map_location_pinpoint}}" required/>
                                     </div>
                                 </div>
-
                             </div>
+
                         </div>
                         <div class="card-header">
                             <h3 class="card-title">{{__('cp.Currency rates against the Kuwaiti dinar')}}</h3>

@@ -52,7 +52,7 @@
                     @enderror
                     <div class="form-group form-calender">
                         <input type="text" id="dateInput" name="date_of_birth" class="form-control" value="{{ old('date_of_birth') }}"
-                               placeholder="@lang('website.Date of birth') *" required />
+                               placeholder="@lang('website.Date of birth') *" required readonly/>
                         <i class="icon-calender"></i>
                     </div>
                     @error('date_of_birth')
@@ -78,16 +78,20 @@
 @endsection
 @section('js')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('apple-signin-form');
             const appleButton = document.getElementById('apple-signin-button');
+            let isSigningIn = false;
 
-            form.addEventListener('submit', function(e) {
+            form.addEventListener('submit', function (e) {
                 e.preventDefault();
             });
 
-            appleButton.addEventListener('click', function(e) {
+            appleButton.addEventListener('click', function (e) {
                 e.preventDefault();
+
+                if (isSigningIn) return;
+                isSigningIn = true;
 
                 clearAllErrors();
 
@@ -116,13 +120,10 @@
                 }
 
                 if (isValid) {
-                    // Execute reCAPTCHA
-                    grecaptcha.ready(function() {
-                        grecaptcha.execute('{{ env('RECAPTCHA_SITE_KEY', "6LeqtR0rAAAAAKMziyF9l1Vc8wHwO7q_9ikGVdvU") }}', { action: 'apple_signin' }).then(function(token) {
-                            // Set reCAPTCHA token in the hidden input
+                    grecaptcha.ready(function () {
+                        grecaptcha.execute('{{ env('RECAPTCHA_SITE_KEY', "6LeqtR0rAAAAAKMziyF9l1Vc8wHwO7q_9ikGVdvU") }}', { action: 'apple_signin' }).then(function (token) {
                             document.getElementById('recaptchaToken').value = token;
 
-                            // Proceed with Apple Sign-In
                             if (window.AppleID) {
                                 setupAppleSignIn();
                             } else {
@@ -133,7 +134,8 @@
                                 script.onload = setupAppleSignIn;
                                 document.head.appendChild(script);
                             }
-                        }).catch(function(error) {
+                        }).catch(function (error) {
+                            isSigningIn = false;
                             console.error('reCAPTCHA failed:', error);
                             Swal.fire({
                                 icon: 'error',
@@ -143,17 +145,18 @@
                             });
                         });
                     });
+                } else {
+                    isSigningIn = false;
                 }
             });
 
-            // Clear all error messages
             function clearAllErrors() {
                 const errorMessages = document.querySelectorAll('.error');
-                errorMessages.forEach(function(error) {
+                errorMessages.forEach(function (error) {
                     error.remove();
                 });
             }
-            // Show error message below the field
+
             function showError(element, message) {
                 const existingError = element.parentNode.querySelector('.error');
                 if (existingError) {
@@ -169,7 +172,6 @@
                 element.style.marginBottom = '30px';
             }
 
-            // Clear error message from the field
             function clearError(element) {
                 const existingError = element.parentNode.querySelector('.error');
                 if (existingError) {
@@ -179,10 +181,9 @@
                 element.style.marginBottom = '';
             }
 
-            // Add input event to clear error messages on input
             const inputs = document.querySelectorAll('input, select');
-            inputs.forEach(function(input) {
-                input.addEventListener('input', function() {
+            inputs.forEach(function (input) {
+                input.addEventListener('input', function () {
                     clearError(input);
                 });
             });
@@ -196,9 +197,10 @@
                     usePopup: true
                 });
 
-                AppleID.auth.signIn().then(function(response) {
+                AppleID.auth.signIn().then(function (response) {
                     handleAppleResponse(response);
-                }).catch(function(error) {
+                }).catch(function (error) {
+                    isSigningIn = false;
                     console.error('Apple Sign In failed:', error);
                     Swal.fire({
                         icon: 'error',
@@ -209,7 +211,6 @@
                 });
             }
 
-            // Handle Apple response
             function handleAppleResponse(response) {
                 const form = document.createElement('form');
                 form.method = 'POST';

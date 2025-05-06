@@ -9,7 +9,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>{{__('cp.value')}}</label>
-            <input type="number" class="form-control" name="discount_percentage" value="{{ old('discount_percentage',@$item->discount_percentage) }}"  min="1" required />
+            <input type="number" class="form-control" name="discount_percentage" value="{{ old('discount_percentage',@$item->discount_percentage) }}"  min="1" max="100" required />
         </div>
     </div>
     <div class="col-md-6">

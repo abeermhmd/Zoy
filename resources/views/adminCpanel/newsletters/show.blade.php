@@ -48,14 +48,7 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="content_{{ $locale->lang }}">{{ __('cp.content_' . $locale->lang) }}</label>
-                                        <textarea class="form-control kt-ckeditor ckEditor-y" id="kt-ckeditor-{{ $loop->index+4 }}" {{
-                    ($locale->lang == 'ar') ? 'dir=rtl' : '' }}
-                                        name="content_{{ $locale->lang }}"
-                                                  rows="4"
-                                                  disabled>{!! old('content_' . $locale->lang, @$item->translate($locale->lang)->content) !!}</textarea>
-                                        @error('content_' . $locale->lang)
-                                        <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                        {!! old('content_' . $locale->lang, @$item->translate($locale->lang)->content) !!}
                                     </div>
                                 </div>
                             @endforeach
@@ -98,12 +91,4 @@
     <!--end::Entry-->
 </div>
 
-@endsection
-@section('js')
-    <script src="https://cdn.ckeditor.com/ckeditor5/37.0.1/super-build/ckeditor.js"></script>
-    @include('adminCpanel.settings.editor_script')
-    <script src="{{ asset('/admin_assets/plugins/custom/ckeditor/ckeditor-classic.bundle.js') }}"></script>
-    <script src="{{ asset('/admin_assets/js/pages/crud/forms/editors/ckeditor-classic.js') }}"></script>
-    <script src="{{ asset('/admin_assets/plugins/custom/select2/select2.min.js') }}"></script>
-    <script src="{{ asset('/admin_assets/plugins/jquery/jquery.min.js') }}"></script>
 @endsection

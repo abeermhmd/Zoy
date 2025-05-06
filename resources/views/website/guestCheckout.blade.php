@@ -104,7 +104,7 @@
                         <div class="payment-method wow fadeInUp">
                             <h5>@lang('website.Payment Method')</h5>
                             <div class="list-pay">
-                                <div class="check--accept">
+                                <div class="check--accept knet">
                                     <input class="inp-cbx" id="knet" name="payments" value="1" type="radio" checked="">
                                     <label class="con-che" for="knet">
                                         <div class="sec-title">
@@ -195,6 +195,14 @@
                 var postalCodeField = $(formSelector + " #postalCode");
                 var savedCityId = citySelect.data('selected'); // Get the saved city ID
 
+                if (countryId == 1) { // الكويت
+                    $(".check--accept.knet").show();
+                    $("#knet").prop("checked", true);
+                } else {
+                    $(".check--accept.knet").hide();
+                    $("#knet").prop("checked", false);
+                    $("#visa").prop("checked", true);
+                }
                 if (countryId) {
                     $.ajax({
                         url: "{{ route('get.cities') }}",
@@ -220,6 +228,9 @@
                                 addressLineOne.attr("placeholder", "@lang('website.address_line_one')");
                                 addressLineTwo.attr("placeholder", "@lang('website.address_line_two') (@lang('website.Optional'))");
                                 postalCodeField.parent('.form-group').show();
+                                $(".check--accept.knet").hide(); // إخفاء Knet إذا لم يتم تحديد دولة
+                                $("#knet").prop("checked", false);
+                                $("#visa").prop("checked", true);
                             }
 
                             // Populate cities

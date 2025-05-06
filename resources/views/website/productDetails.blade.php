@@ -381,12 +381,12 @@
         ];
 
         function updateStockStatus() {
-            var selectedColor = $('input[name="color"]:checked').val();
-            var selectedSize = $('input[name="size"]:checked').val();
+            var selectedColor = $('input[name="color"]:checked').val() || null;
+            var selectedSize = $('input[name="size"]:checked').val() || null;
             var productColorSizeId = null;
             var availableQuantity = 0;
             var isOutOfStock = false;
-            var inCart = false; // للتحقق  إذا كان العنصر في السلة
+            var inCart = false;
 
             $('input[name="color"]').prop('disabled', false);
             $('input[name="size"]').prop('disabled', false);
@@ -408,8 +408,6 @@
                         productColorSizeId = pcs.id;
                         availableQuantity = pcs.quantity;
                         isOutOfStock = (pcs.quantity <= 0);
-
-                        // تحقق مما إذا كان المنتج موجودًا في السلة
                         if (colorSizeInCart.includes(pcs.id)) {
                             inCart = true;
                         }
@@ -418,7 +416,6 @@
             } else {
                 availableQuantity = {{@$product->remaining_quantity ?? 0}};
                 isOutOfStock = {{ isset($product->remaining_quantity) ? ($product->remaining_quantity <= 0 ? 1 : 0) : 1 }};
-
             }
 
             availableQuantity = Math.max(availableQuantity, 1);
@@ -433,29 +430,18 @@
                 $('.quantity').hide();
                 $('.count-quat').val(0).prop('disabled', true);
 
-                // تعطيل اللون والحجم الذي تم اختياره وله كمية صفر
-                if (productColorSizes.length > 0 && selectedColor.length > 0) {
-
+                // Disable the selected color/size with zero quantity
+                if (productColorSizes.length > 0 && selectedColor) {
                     $('input[name="color"]').each(function () {
-                        if ($(this).val() !== selectedColor) {
-                            $(this).prop('disabled', false);
-                        } else {
-                            $(this).prop('disabled', true);
-                        }
+                        $(this).prop('disabled', $(this).val() === selectedColor);
                     });
                 }
 
-                if (productColorSizes.length > 0 && selectedSize.length > 0) {
+                if (productColorSizes.length > 0 && selectedSize) {
                     $('input[name="size"]').each(function () {
-                        if ($(this).val() !== selectedSize) {
-                            $(this).prop('disabled', false);
-                        } else {
-                            $(this).prop('disabled', true);
-                        }
+                        $(this).prop('disabled', $(this).val() === selectedSize);
                     });
                 }
-
-
             } else {
                 $('.outOfStock').hide();
                 $('#cart-button').show();
@@ -469,7 +455,7 @@
                         .removeClass('d-none')
                         .text(`@lang('website.Available Quantity') : ${availableQuantity}`);
                 } else {
-                    $('.availableQuantityText').addClass('d-none'); // إخفاء النص إذا كانت الكمية أكثر من 1
+                    $('.availableQuantityText').addClass('d-none');
                 }
 
                 if (parseInt($('.count-quat').val()) > availableQuantity) {
@@ -481,34 +467,14 @@
                 $('.jsQuantityDecrease').toggleClass('disabled', parseInt($('.count-quat').val()) <= 1);
                 $('.jsQuantityIncrease').toggleClass('disabled', parseInt($('.count-quat').val()) >= availableQuantity);
             }
-            // عند تحديد لون أو حجم، إزالة التعطيل
+
+            // Re-enable color/size inputs on change
             $('input[name="color"], input[name="size"]').on('change', function () {
-                var selectedColor = $('input[name="color"]:checked');
-                var selectedSize = $('input[name="size"]:checked');
-
-                if (productColorSizes.length > 0 && selectedColor.length > 0) {
-                    // إزالة التعطيل من كل الألوان باستثناء اللون الذي تم اختياره
-                    $('input[name="color"]').each(function () {
-                        if ($(this).val() !== selectedColor.val()) {
-                            $(this).prop('disabled', false);
-                        } else {
-                            $(this).prop('disabled', false);
-                        }
-                    });
-                }
-
-                if (productColorSizes.length > 0 &&  selectedSize.length > 0) {
-                    // إزالة التعطيل من كل الأحجام باستثناء الحجم الذي تم اختياره
-                    $('input[name="size"]').each(function () {
-                        if ($(this).val() !== selectedSize.val()) {
-                            $(this).prop('disabled', false);
-                        } else {
-                            $(this).prop('disabled', false);
-                        }
-                    });
-                }
+                $('input[name="color"]').prop('disabled', false);
+                $('input[name="size"]').prop('disabled', false);
             });
-            // تحديث زر السلة بناءً على حالة المنتج (موجود في السلة أو لا)
+
+            // Update cart button based on cart status
             if (inCart) {
                 $('#cart-button').removeClass('addToCart').addClass('removeFromCart')
                     .html('<span>@lang("website.Remove from Bag")</span>');
@@ -516,6 +482,7 @@
                 $('#cart-button').removeClass('removeFromCart').addClass('addToCart')
                     .html('<span>@lang("website.Add to Bag")</span>');
             }
+
             return productColorSizeId;
         }
 
@@ -538,6 +505,7 @@
             $(document).on('change', 'input[name="color"], input[name="size"]', function () {
                 updateStockStatus();
             });
+
 
             $(document).on('click', '.jsQuantityIncrease', function (e) {
                 e.stopImmediatePropagation(); // Prevent duplicate handlers

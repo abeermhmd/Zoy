@@ -2,26 +2,28 @@
 
 namespace App\Services;
 
+use App\Actions\Colors\{CreateColorAction, UpdateColorAction, GetColorAction ,GetColorsAction};
+use App\Contracts\ColorContract;
+use App\DataTransferObjects\Colors\{ColorDataTransfer,ColorFilterDataTransfer};
 use App\Models\Color;
-use Illuminate\Support\Facades\DB;
 
-class ColorService {
-    public function createColor($data): void
-    {
-        DB::transaction(function () use ($data) {
-            $newItem = new Color();
-            storeTranslatedFields($newItem , ['name'] , $data);
-            $newItem->hex_code = $data->hex_code;
-            $newItem->save();
-        });
-    }
-    public function updateColor(Color $item, $data): void
-    {
-        DB::transaction(function () use ($data , $item) {
-            storeTranslatedFields($item , ['name'] , $data );
-            $item->hex_code = $data->hex_code;
-            $item->save();
-        });
-    }
+class ColorService implements ColorContract {
 
+   public function getColors(?ColorFilterDataTransfer $filters = null)
+   {
+       return GetColorsAction::execute($filters);
+   }
+
+    public function getColor(string $id)
+    {
+      return  GetColorAction::execute($id);
+    }
+    public function createColor(ColorDataTransfer $data)
+    {
+        CreateColorAction::execute($data);
+    }
+    public function updateColor(Color $color, ColorDataTransfer $data)
+    {
+       UpdateColorAction::execute($color, $data);
+    }
 }

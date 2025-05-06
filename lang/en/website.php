@@ -287,7 +287,7 @@ return [
     'Contact Seller' => 'Contact Seller',
     'Shopping cart' => 'Shopping cart',
     'Empty Cart' => 'Empty Cart',
-    'text_cart' => 'Your cart is currently empty. Browse our store to add items, and they will appear here when selected.',
+    'text_cart' => 'Your cart is empty, start shopping now and add your favorite products to the cart!',
     'Product' => 'Product',
     'Payment Details' => 'Payment Details',
     'Proceed To Checkout' => 'Proceed To Checkout',
@@ -365,6 +365,9 @@ return [
     'recaptcha_failed' => 'reCAPTCHA verification failed. Please try again.',
     'invalid_credentials' => 'Invalid login credentials.',
     'recaptcha_notice' => 'This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.',
+    'Apple Sign In Error' => 'Apple Sign In Error',
+    'status' => 'Status',
+    'We will notify you once your order has shipped. Thank you for shopping with us!' => 'We will notify you once your order has shipped. Thank you for shopping with us!',
 
 
 ];

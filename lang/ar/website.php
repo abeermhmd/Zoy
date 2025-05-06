@@ -255,7 +255,7 @@ return [
     'Contact Seller' => 'اتصل بالبائع',
     'Shopping cart' => 'سلة التسوق',
     'Empty Cart' => 'السلة فارغة',
-    'text_cart' => 'سلتك حاليا فارغة .تصفح في متجرنا لاضافة منتجات . وسوف تظهر هنا عند اختيارها',
+    'text_cart' => 'سلة التسوق الخاصة بك فارغة، ابدأ التسوق الآن وأضف منتجاتك المفضلة إلى سلة التسوق!',
     'Product' => 'المنتج',
     'Payment Details' => 'تفاصيل الدفع',
     'Proceed To Checkout'=>'الذهاب للشراء',
@@ -311,6 +311,7 @@ return [
     'Order Status'=>'حالة الطلب',
     'Transaction ID'=>'معرف التحويل',
     'Order Summary'=>'ملخص الطلب',
+    'status' => 'الحالة',
     'placed' => 'جديد',
     'onWay' => 'قيد التوصيل',
     'delivered' => 'تم التوصيل',
@@ -335,4 +336,6 @@ return [
     'recaptcha_failed' => 'فشل التحقق من reCAPTCHA، يرجى المحاولة مرة أخرى.',
     'invalid_credentials' => 'بيانات الدخول غير صحيحة.',
     'recaptcha_notice' => 'هذا الموقع محمي بواسطة reCAPTCHA وتطبق سياسة الخصوصية وشروط الخدمة من Google.',
-];
+    'Apple Sign In Error' => 'خطأ في تسجيل الدخول إلى Apple',
+    'We will notify you once your order has shipped. Thank you for shopping with us!' => 'سنُعلمك فور شحن طلبك. شكرًا لتسوقك معنا!',
+    ];

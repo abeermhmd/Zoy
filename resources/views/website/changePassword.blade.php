@@ -94,12 +94,12 @@
                         $('#newPassword').val('');
                         $('#confirmPassword').val('');
                     } else if (response.validator != null) {
-                        ('.errorTextModal').empty();
+                        $('.errorTextModal').empty();
                         $('.errorTextModal').append(response.validator);
                         $('#modalError').modal('show');
 
                     } else {
-                        ('.errorTextModal').empty();
+                        $('.errorTextModal').empty();
                         $('.errorTextModal').append(response.message);
                         $('#modalError').modal('show');
 

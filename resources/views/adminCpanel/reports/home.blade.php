@@ -187,20 +187,19 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @forelse($categorySales as $category => $sales)
-                                            @foreach($sales as $sale)
-                                                <tr>
-                                                    <td>{{ $category }}</td>
-                                                    <td>{{ $sale->quantity_sold }}</td>
-                                                    <td>{{ number_format($sale->total_amount, 3) }}</td>
-                                                </tr>
-                                            @endforeach
+                                        @forelse($categorySales as $sale)
+                                            <tr>
+                                                <td>{{ $sale->category_name }}</td>
+                                                <td>{{ $sale->total_quantity }}</td>
+                                                <td>{{ number_format($sale->total_amount, 3) }}</td>
+                                            </tr>
                                         @empty
                                             <div
                                                 style="text-align: center; color: #555; font-weight: bold; font-size: 18px; margin: 15px; padding: 20px; border: 2px dashed #ccc; border-radius: 10px; background-color: #f9f9f9;" id="no-data-message">
                                                 @lang('cp.no_data')
                                             </div>
                                         @endforelse
+
                                         </tbody>
                                     </table>
 
