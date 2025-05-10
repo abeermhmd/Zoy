@@ -11,6 +11,8 @@ interface CategoryContract
 
     public function getCategory(string $id);
 
+    public function GetProductCategoriesAction();
+
     public function createCategory(CategoryDataTransfer $data);
 
     public function updateCategory(Category $category, CategoryDataTransfer $data);

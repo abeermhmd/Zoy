@@ -306,21 +306,96 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modalSuccessCopy" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="content-succes-sign">
+                        <h3 id="modalTitle">@lang('website.Success')</h3>
+                        <p id="modalMessage"></p>
+                        <a class="btn-site" data-bs-dismiss="modal" aria-label="Close"><span>@lang('website.OK')</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
     <script>
+        function showModalCopyMessage(title, message) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            $('#modalSuccessCopy').modal('show');
+        }
+
         document.querySelectorAll('.btn-share').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
+
+                const messages = {
+                    en: {
+                        copySuccess: 'Link copied to clipboard! You can now paste and share it.',
+                        copyFail: 'Could not copy the link automatically. The product name is: ',
+                        shareTitle: 'Check this out!',
+                        shareText: 'I want to share this awesome product with you: ',
+                        okButton: 'OK'
+                    },
+                    ar: {
+                        copySuccess: 'تم نسخ الرابط إلى الحافظة! يمكنك الآن لصقه ومشاركته.',
+                        copyFail: 'تعذر نسخ الرابط تلقائيًا. اسم المنتج هو: ',
+                        shareTitle: 'شاهد هذا!',
+                        shareText: 'أريد مشاركة هذا المنتج الرائع معك: ',
+                        okButton: 'موافق'
+                    }
+                };
+
+                // Get user language or fallback to English
+                const userLang = document.documentElement.lang || navigator.language || navigator.userLanguage;
+                const lang = userLang.startsWith('ar') ? 'ar' : 'en';
+                const msg = messages[lang];
+
+                // استرجاع اسم المنتج من data-product-name
+                const productName = btn.dataset.productName || 'Untitled Product';
+
+                const shareData = {
+                    title: msg.shareTitle,
+                    text: `${msg.shareText}${productName}`,
+                    url: window.location.href
+                };
+
                 if (navigator.share) {
-                    navigator.share({
-                        title: 'Check this out!',
-                        text: 'I want to share this awesome content with you',
-                        url: window.location.href
-                    }).catch(console.error);
+                    // Native sharing
+                    navigator.share(shareData).catch(error => {
+                        console.error('Error sharing:', error);
+                    });
                 } else {
-                    alert('Web Share API not supported');
+                    // Fallback for browsers that don't support Web Share API
+                    const fallbackShare = () => {
+                        const tempInput = document.createElement('input');
+                        document.body.appendChild(tempInput);
+                        tempInput.value = shareData.url;
+                        tempInput.select();
+
+                        try {
+                            document.execCommand('copy');
+                            showModalCopyMessage('@lang("website.Success")', msg.copySuccess);
+                        } catch (err) {
+                            console.error('Failed to copy: ', err);
+                            showModalCopyMessage('@lang("website.Error")', `${msg.copyFail}${productName}`);
+                        }
+
+                        document.body.removeChild(tempInput);
+
+                        window.open(
+                            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}`,
+                            'facebook-share',
+                            'width=580,height=296'
+                        );
+                    };
+
+                    fallbackShare();
                 }
             });
         });

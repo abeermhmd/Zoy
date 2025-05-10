@@ -2,9 +2,7 @@
 
 namespace App\Actions\Categories;
 
-use App\DataTransferObjects\Admins\AdminFilterDataTransfer;
 use App\DataTransferObjects\Categories\CategoryFilterDataTransfer;
-use App\Models\Admin;
 use App\Models\Category;
 
 class GetCategoriesAction

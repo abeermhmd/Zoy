@@ -23,7 +23,7 @@
                 </div>
 
                 <form class="form-group" id="registerForm" novalidate>
-                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    @csrf
                     <div class="form-group">
                         <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}"
                                placeholder="@lang('website.Full name') *" required />
@@ -95,6 +95,11 @@
 
 @section('js')
     <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         $(document).ready(function () {
             $(document).on('click', 'input, select, textarea, .select2', function () {
                 $(this).attr('style', "").next('span.errorSpan').remove();

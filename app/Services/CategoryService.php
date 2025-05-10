@@ -2,7 +2,11 @@
 
 namespace App\Services;
 
-use App\Actions\Categories\{CreateCategoryAction, UpdateCategoryAction, GetCategoriesAction, GetCategoryAction};
+use App\Actions\Categories\{CreateCategoryAction,
+    GetProductCategoriesAction,
+    UpdateCategoryAction,
+    GetCategoriesAction,
+    GetCategoryAction};
 use App\Contracts\CategoryContract;
 use App\DataTransferObjects\Categories\{CategoryDataTransfer,CategoryFilterDataTransfer };
 use App\Models\Category;
@@ -29,5 +33,9 @@ class CategoryService implements CategoryContract
     public function updateCategory(Category $category, CategoryDataTransfer $data)
     {
         UpdateCategoryAction::execute($category, $data);
+    }
+    public function GetProductCategoriesAction()
+    {
+        return GetProductCategoriesAction::execute();
     }
 }

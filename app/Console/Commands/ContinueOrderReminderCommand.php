@@ -31,7 +31,7 @@ class ContinueOrderReminderCommand extends Command
             $totalHours = $this->settings->remember_continue_order * 24;
             $diff = Carbon::now()->subHours($totalHours);
 
-            $orders = Order::where('payment_status', 0)->whereNtNull('user_id')
+            $orders = Order::where('payment_status', 0)->whereNotNull('user_id')
                 ->where('created_at', '<=', $diff)->get();
 
             $emailText = EmailText::active()->where('type', 'continue_order')->first();

@@ -158,16 +158,18 @@ class LoginController extends Controller
                 $user->mobile = $fullMobile;
                 $user->date_of_birth = $signupData['date_of_birth'];
                 $user->save();
+
                 if (function_exists('fastcgi_finish_request')) {
+                    response()->noContent()->send();
                     fastcgi_finish_request();
+
+                    $this->sendRegistrationEmail($user);
+                } else {
+                    dispatch(function () use ($user) {
+                        $this->sendRegistrationEmail($user);
+                    })->afterResponse();
                 }
 
-                $emailText = EmailText::active()->where('type', 'After_Registration')->first();
-                if ($emailText && isset($this->notificationService)) {
-                    $emailData = ['to' => $user->email, 'subject' => $emailText->subject];
-                    $message = view('website.email', ['item' => $emailText])->render();
-                    $this->notificationService->sendNotification($message, $emailData, 'email');
-                }
             } else {
                 $user->social_token = $socialUser->token;
                 $user->social_type = $provider;
@@ -272,14 +274,16 @@ class LoginController extends Controller
                 $user->save();
 
                 if (function_exists('fastcgi_finish_request')) {
-                    fastcgi_finish_request(); // إرسال الاستجابة إلى العميل أولًا
+                    response()->noContent()->send();
+                    fastcgi_finish_request();
+
+                    $this->sendRegistrationEmail($user);
+                } else {
+                    dispatch(function () use ($user) {
+                        $this->sendRegistrationEmail($user);
+                    })->afterResponse();
                 }
-                $emailText = EmailText::active()->where('type', 'After_Registration')->first();
-                if ($emailText && isset($this->notificationService)) {
-                    $emailData = ['to' => $user->email, 'subject' => $emailText->subject];
-                    $message = view('website.email', ['item' => $emailText])->render();
-                    $this->notificationService->sendNotification($message, $emailData, 'email');
-                }
+
             } else {
                 $user->apple_token = $appleUserId;
                 $user->mobile = $fullMobile ?? $user->mobile;
@@ -313,4 +317,15 @@ class LoginController extends Controller
         }
         return $referralCode;
     }
+
+    private function sendRegistrationEmail(User $user)
+    {
+        $emailText = EmailText::active()->where('type', 'After_Registration')->first();
+        if ($emailText && isset($this->notificationService)) {
+            $emailData = ['to' => $user->email, 'subject' => $emailText->subject];
+            $message = view('website.email', ['item' => $emailText])->render();
+            $this->notificationService->sendNotification($message, $emailData, 'email');
+        }
+    }
+
 }

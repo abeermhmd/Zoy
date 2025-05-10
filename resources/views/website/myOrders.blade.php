@@ -18,7 +18,7 @@
                 </div>
                 <div class="dta-order">
                     <p>@lang('website.Amount')</p>
-                    <span>{{@$order->total}} @lang('website.KWD')</span>
+                    <span>{{number_format(@$order->total ?? 0 ,3)}} @lang('website.KWD')</span>
                 </div>
                 <div class="dta-order">
                     <p>@lang('website.Order Status')</p>

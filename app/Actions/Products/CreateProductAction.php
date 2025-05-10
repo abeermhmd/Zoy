@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Actions\Categories;
+namespace App\Actions\Products;
 
 use App\Services\CategoryService;
 use App\Models\Category;
 use App\DataTransferObjects\Categories\CategoryDataTransfer;
 use Illuminate\Support\Facades\DB;
 
-class CreateCategoryAction
+class CreateProductAction
 {
     public static function execute(CategoryDataTransfer $categoryDataTransfer)
     {

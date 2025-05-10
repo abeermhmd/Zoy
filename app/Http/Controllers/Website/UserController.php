@@ -9,6 +9,7 @@ use App\Services\UserService;
 use App\Models\{EmailText, Order, Setting, Country, User, UserAddress, Product, Favorite};
 use Auth;
 use Session;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -130,23 +131,42 @@ class UserController extends Controller
             return response()->json([
                 'success' => false,
                 'code' => 201,
-                'error' => __('website.recaptcha_verification_failed', 'فشل التحقق الأمني، يرجى تحديث الصفحة والمحاولة مرة أخرى')
+                'error' => __('recaptcha verification failed', ['default' => 'حدث خطأ أثناء محاولة التسجيل. يرجى المحاولة مرة أخرى لاحقاً.'])
             ]);
         }
+
         $newUser = $this->userService->createUser($request);
 
         Auth::guard()->login($newUser);
 
+        $response = response()->json(['code' => 200, 'message' => __('api.ok'), 'redirect_url' => route('home')]);
+
+        if (function_exists('fastcgi_finish_request')) {
+            $response->send();
+            fastcgi_finish_request();
+
+            $this->sendRegistrationEmail($newUser);
+        } else {
+
+            dispatch(function() use ($newUser) {
+                $this->sendRegistrationEmail($newUser);
+            })->afterResponse();
+
+            return $response;
+        }
+    }
+
+    private function sendRegistrationEmail($user)
+    {
         $emailText = EmailText::active()->where('type', 'After_Registration')->first();
         if ($emailText) {
             $emailData = [
-                'to' => $newUser->email,
+                'to' => $user->email,
                 'subject' => $emailText->subject,
             ];
             $message = view('website.email', ['item' => $emailText])->render();
             $this->notificationService->sendNotification($message, $emailData, 'email');
         }
-        return response()->json(['code' => 200, 'message' => __('api.ok'), 'redirect_url' => route('home')]);
     }
 
     public function myAddresses()

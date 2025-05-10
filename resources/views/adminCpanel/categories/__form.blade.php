@@ -41,7 +41,7 @@
                 <label>{{__('cp.bulk_discount_percentage')}} ( {{__('cp.optional')}} )</label>
                 <input type="number" class="form-control" name="discount"
                        value="{{ old('discount', @$item->discount) }}"
-                       step="0.01" min="0"/>
+                       step="0.01" min="0" max="100"/>
             </div>
         </div>
         @if(request()->routeIs('admins.categories.create') || (request()->routeIs('admins.categories.edit') && @$item->subcategories->isEmpty()))

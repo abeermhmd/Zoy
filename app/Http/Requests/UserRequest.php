@@ -34,7 +34,7 @@ class UserRequest extends FormRequest
             case 'register':
                 $rules = [
                     'name' => 'required',
-                    'email' => 'required|email|unique:users,email',
+                    'email' => 'required|email|unique:users,email,NULL,id,deleted_at,NULL',
                     'date_of_birth' => 'required|date|before:today',
                     'mobile' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|digits_between:8,14|unique:users,mobile',
                     'password' => 'required|min:6',

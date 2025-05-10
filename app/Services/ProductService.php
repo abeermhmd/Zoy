@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Actions\Products\GetProductAction;
+use App\Actions\Products\GetProductsAction;
 use App\Contracts\ProductContract;
 use App\DataTransferObjects\Products\ProductFilterDataTransfer;
 use App\Models\{Product, ProductColor, ProductColorImage, ProductColorSize, ProductImage, ProductSimilar, ProductSize};
@@ -15,11 +17,11 @@ class ProductService implements ProductContract
 
     public function getProducts(?ProductFilterDataTransfer $filters = null)
     {
-        // TODO: Implement getProducts() method.
+        return GetProductsAction::execute($filters);
     }
-    public function getProduct(string $id)
+    public function getProduct(string $id , array $with = [] , $hasVariants = false)
     {
-        // TODO: Implement getProduct() method.
+       return GetProductAction::execute($id,$with,$hasVariants);
     }
 
     public function createProduct($data): Product

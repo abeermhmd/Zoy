@@ -276,8 +276,7 @@
                     <div class="content-succes-sign">
                         <h3>@lang('website.Sorry')</h3>
                         <p>@lang('website.youcannotaddfavorite').</p>
-                        <a href="{{route('signIn')}}" class="btn-site" data-bs-dismiss="modal"
-                           aria-label="Close"><span>@lang('website.login')</span></a>
+                        <a href="{{route('signIn')}}" class="btn-site"  aria-label="Close"><span>@lang('website.login')</span></a>
                     </div>
                 </div>
             </div>

@@ -2,10 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Setting;
-use App\Models\User;
-use App\Models\Cart;
-use App\Models\EmailText;
+use App\Models\{Setting,User,Cart,EmailText};
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use App\Services\Notifications\NotificationService;

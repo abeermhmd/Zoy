@@ -18,7 +18,7 @@
                             <span>{{ @$address->country->name }}</span>
                             <p>{{ @$address->city->name }} , {{ @$address->address_line_one }}
                                 @if (@$address->address_line_two != '')
-                                , {{ @$address->address_line_two }}
+                                    , {{ @$address->address_line_two }}
                                 @endif
                                 @if (@$address->extra_directions != '')
                                     , {{ @$address->extra_directions }}
@@ -51,9 +51,6 @@
             </div>
         </div>
     </div>
-
-
-
     <div class="modal fade" id="modalNewAddress" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true"
          role="dialog">
         <div class="modal-dialog">
@@ -132,8 +129,9 @@
         </div>
     </div>
     @foreach($data['addresses'] as $address)
-        <div class="modal fade" id="deleteAddressModal{{ @$address->id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-             aria-modal="true"role="dialog">
+        <div class="modal fade" id="deleteAddressModal{{ @$address->id }}" tabindex="-1"
+             aria-labelledby="exampleModalLabel"
+             aria-modal="true" role="dialog">
             <div class="wsmall modal-dialog">
                 <div class="modal-content">
                     <div class="modal-body">
@@ -153,6 +151,20 @@
         </div>
     @endforeach
 
+    <div class="modal fade" id="modalSuccessAddress" tabindex="-1" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="content-succes-sign">
+                        <h3>@lang('website.Success')</h3>
+                        <p class="successMessageAddress"></p>
+                        <a class="btn-site" data-bs-dismiss="modal" aria-label="Close"><span>@lang('website.OK')</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('js')
     <script>
@@ -164,7 +176,7 @@
                     var addressLineOne = $(formSelector + " #address_line_one");
                     var addressLineTwo = $(formSelector + " #address_line_two");
                     var postalCodeField = $(formSelector + " #postalCode");
-                    var savedCityId = citySelect.data('selected'); // Get the saved city ID
+                    var savedCityId = citySelect.data('selected');
 
                     if (countryId) {
                         $.ajax({
@@ -177,7 +189,7 @@
                             success: function (response) {
                                 citySelect.empty();
 
-                                if (countryId == 1) { // Assuming country ID 1 is Kuwait
+                                if (countryId == 1) {
                                     citySelect.append('<option value="">@lang("website.Select Area")</option>');
                                     $(formSelector + " #shipping_content_kuwait").show();
                                     $(formSelector + " #shipping_content_outside_kuwait").hide();
@@ -193,15 +205,13 @@
                                     postalCodeField.parent('.form-group').show();
                                 }
 
-                                // Populate cities
                                 $.each(response.cities, function (key, city) {
                                     citySelect.append('<option value="' + city.id + '">' + city.name + '</option>');
                                 });
 
-                                // Set the saved city value after cities are populated
                                 if (savedCityId && $(formSelector + " .country_id").data("initial-load") === true) {
                                     citySelect.val(savedCityId);
-                                    $(formSelector + " .country_id").removeData("initial-load"); // Clear flag after initial load
+                                    $(formSelector + " .country_id").removeData("initial-load");
                                 }
                             },
                             error: function (xhr) {
@@ -222,6 +232,21 @@
 
             setupCountryChangeHandler("#modalNewAddress");
             $("#modalNewAddress .country_id").trigger("change");
+
+            function showSuccessAddressModal(message) {
+                if (!$('#modalSuccessAddress').hasClass('show')) {
+                    $('.successMessageAddress').empty().text(message);
+                    $('#modalSuccessAddress').modal('show');
+                }
+            }
+
+            // Add event listener for modal close (when OK is clicked)
+            $('#modalSuccessAddress').on('hidden.bs.modal', function () {
+                // Check if the modal was shown for add or edit operation
+                if ($(this).data('action') === 'add' || $(this).data('action') === 'edit') {
+                    location.reload();
+                }
+            });
 
             $(document).on('click', 'input,select,textarea,.select2', function () {
                 $(this).attr('style', "").next('span.errorSpan').remove();
@@ -255,8 +280,8 @@
                     return false;
                 }
 
-                    $('.submitAddress span').html('<i class="fa fa-spinner fa-spin" style="font-size: 20px;position: initial;color:black;"></i>');
-                    $(".submitAddress").attr("disabled", true);
+                $('.submitAddress span').html('<i class="fa fa-spinner fa-spin" style="font-size: 20px;position: initial;color:black;"></i>');
+                $(".submitAddress").attr("disabled", true);
 
                 $.ajax({
                     url: "{{ route('addAddress') }}",
@@ -270,8 +295,9 @@
                             $(".submitAddress").attr("disabled", false);
                             $(".submitAddress").html("<span>@lang('website.Add')</span>");
                             $("#modalNewAddress").modal("hide");
-                            location.reload();
-                            return;
+                            // Set action data for add operation
+                            $('#modalSuccessAddress').data('action', 'add');
+                            showSuccessAddressModal("@lang('website.Address added successfully')");
                         } else if (response.validator != null) {
                             Swal.fire({
                                 icon: 'error',
@@ -367,8 +393,9 @@
                             $(".editAddress").attr("disabled", false);
                             $(".editAddress").html("<span>@lang('website.Update')</span>");
                             $("#modalEditAdress").modal("hide");
-                            location.reload();
-                            return;
+                            // Set action data for edit operation
+                            $('#modalSuccessAddress').data('action', 'edit');
+                            showSuccessAddressModal("@lang('website.Address updated successfully')");
                         } else if (response.validator != null) {
                             Swal.fire({
                                 icon: 'error',
@@ -391,9 +418,6 @@
                     },
                     error: function (xhr) {
                         handleAjaxError(xhr, $('.editAddress'), "@lang('website.Update')");
-                    },
-                    servedError(xhr) {
-                        handleAjaxError(xhr, $('.editAddress'), "@lang('website.Update')");
                     }
                 });
             });
@@ -412,12 +436,14 @@
                             $("#deleteAddressModal" + address_id).modal('hide');
                             $('.row_address_' + address_id).fadeOut(500, function () {
                                 $(this).remove();
+                                // Set action data for delete operation (no refresh needed)
+                                $('#modalSuccessAddress').data('action', 'delete');
+                                showSuccessAddressModal("@lang('website.Address deleted successfully')");
                             });
-                        }
-                        if (response.totalAddress == 0) {
-                            $(".NoAddressesClass").show();
-                            location.reload();
-                            return;
+                            if (response.totalAddress == 0) {
+                                $(".NoAddressesClass").show();
+                                location.reload();
+                            }
                         }
                     }
                 });

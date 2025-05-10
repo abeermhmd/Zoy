@@ -36,14 +36,14 @@ class CategoryRequest extends FormRequest
             case 'admins.categories.store':
                 $baseRules = [
                     'image' => 'required|image|mimes:jpeg,png,jpg|max:1024',
-                    'discount' => 'nullable|numeric|min:0',
+                    'discount' => 'nullable|numeric|min:0|max:100',
                 ];
                 break;
 
             case 'admins.categories.update':
                  $baseRules = [
                     'image' => 'nullable|image|mimes:jpeg,png,jpg|max:1024',
-                    'discount' => 'nullable|numeric|min:0',
+                    'discount' => 'nullable|numeric|min:0|max:100',
                  ];
                 break;
             case 'admins.subCategories.store':
